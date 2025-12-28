@@ -1,0 +1,19 @@
+http:
+  middlewares:
+    # Headers de sécurité standards (inspirés des bonnes pratiques)
+    secHeaders:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: https
+
+    # Middleware de compression pour la performance
+    traefik-compress:
+      compress: {}

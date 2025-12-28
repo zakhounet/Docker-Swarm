@@ -1,0 +1,53 @@
+http:
+  routers:
+    # --- Accès Proxmox TOM ---
+    proxmox-tom:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`tom-proxmox.test.teamfnb.com`)"
+      middlewares:
+        - "default-headers"
+      tls:
+        certResolver: "cloudflare"
+      service: "proxmox-tom"
+
+    # --- Accès Proxmox ZAKH ---
+    proxmox-zakh:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`zakh-proxmox.test.teamfnb.com`)"
+      middlewares:
+        - "default-headers"
+      tls:
+        certResolver: "cloudflare"
+      service: "proxmox-zakh"
+
+    # --- Accès Proxmox ILAN ---
+    proxmox-ilan:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`ilan-proxmox.test.teamfnb.com`)"
+      middlewares:
+        - "default-headers"
+      tls:
+        certResolver: "cloudflare"
+      service: "proxmox-ilan"
+
+  services:
+    proxmox-tom:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.0.45:8006"
+        passHostHeader: true
+
+    proxmox-zakh:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.0.52:8006"
+        passHostHeader: true
+
+    proxmox-ilan:
+      loadBalancer:
+        servers:
+          - url: "https://192.168.0.54:8006"
+        passHostHeader: true
