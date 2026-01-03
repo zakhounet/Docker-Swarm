@@ -1,14 +1,12 @@
 services:
   traefik:
     image: traefik:v3.6.5
-    container_name: traefik
-    restart: always
     command:
-      # --- Configuration Statique ---
+      - "--log.level=INFO"
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
       - "--api.dashboard=true"
-      # --- Provider Swarm (Syntaxe v3) ---
+      # --- Provider Swarm ---
       - "--providers.swarm=true"
       - "--providers.swarm.network=proxy"
       - "--providers.swarm.exposedByDefault=false"
@@ -18,11 +16,15 @@ services:
       # --- Entrypoints ---
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # --- Certificats Cloudflare ---
+      # --- Certificats Cloudflare (DNS Challenge) ---
       - "--certificatesresolvers.cloudflare.acme.dnschallenge=true"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.cloudflare.acme.email=fnb2@orange.fr"
       - "--certificatesresolvers.cloudflare.acme.storage=/etc/traefik/acme.json"
+      # --- SOLUTIONS SOURCE POUR MODE GLOBAL (Stabilisation) ---
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
+      #- "--certificatesresolvers.cloudflare.acme.dnschallenge.delaybeforecheck=60"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.disablepropagationcheck=true"
     networks:
       - proxy
     ports:
@@ -49,11 +51,18 @@ services:
           - node.role == manager
       labels:
         - "traefik.enable=true"
-        # Dashboard Traefik mis à jour
+        - "traefik.swarm.network=proxy"
+        
+        # --- Configuration du Certificat Wildcard (Approche Lempa) ---
+        - "traefik.http.routers.wildcard-certs.tls.certresolver=cloudflare"
+        - "traefik.http.routers.wildcard-certs.tls.domains[0].main=test.teamfnb.com"
+        - "traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.test.teamfnb.com"
+        
+        # --- Dashboard Traefik ---
         - "traefik.http.routers.traefik-dash.rule=Host(`traefik-dashboard1.test.teamfnb.com`)"
         - "traefik.http.routers.traefik-dash.service=api@internal"
         - "traefik.http.routers.traefik-dash.entrypoints=websecure"
-        - "traefik.http.routers.traefik-dash.tls.certresolver=cloudflare"
+        - "traefik.http.routers.traefik-dash.tls=true"
         - "traefik.http.services.traefik-dash.loadbalancer.server.port=8080"
     logging:
         driver: "json-file"

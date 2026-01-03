@@ -1,1 +1,3 @@
-/mnt/cephfs/docker-cluster/Docker-Swarm/vaultwarden/data
+vaultwarden/data
+portainer/data
+traefik/data
