@@ -2,7 +2,7 @@ services:
   traefik:
     image: traefik:v3.6.5
     command:
-      - "--log.level=INFO"
+      - "--log.level=DEBUG"
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
       - "--api.dashboard=true"
@@ -17,14 +17,18 @@ services:
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
       # --- Certificats Cloudflare (DNS Challenge) ---
+      #- "--certificatesresolvers.cloudflare.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge=true"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.cloudflare.acme.email=fnb2@orange.fr"
       - "--certificatesresolvers.cloudflare.acme.storage=/etc/traefik/acme.json"
+      - "--certificatesresolvers.cloudflare.acme.preferredchain=ISRG Root X1" #pour Portainer secure
       # --- SOLUTIONS SOURCE POUR MODE GLOBAL (Stabilisation) ---
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
-      #- "--certificatesresolvers.cloudflare.acme.dnschallenge.delaybeforecheck=60"
+      - "--certificatesresolvers.cloudflare.acme.dnschallenge.propagation.delaybeforechecks=60"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.disablepropagationcheck=true"
+
+      - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
     networks:
       - proxy
     ports:
@@ -46,17 +50,22 @@ services:
       - TZ=Europe/Paris
     deploy:
       mode: global
+      #replicas: 1  # Remplacez temporairement "mode: global" par ceci pour le débogage
       placement:
         constraints:
           - node.role == manager
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
       labels:
         - "traefik.enable=true"
         - "traefik.swarm.network=proxy"
-        
         # --- Configuration du Certificat Wildcard (Approche Lempa) ---
         - "traefik.http.routers.wildcard-certs.tls.certresolver=cloudflare"
         - "traefik.http.routers.wildcard-certs.tls.domains[0].main=test.teamfnb.com"
-        - "traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.test.teamfnb.com"
+        - "traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.test.teamfnb.com, fix.lefix.test.teamfnb.com"
         
         # --- Dashboard Traefik ---
         - "traefik.http.routers.traefik-dash.rule=Host(`traefik-dashboard1.test.teamfnb.com`)"
