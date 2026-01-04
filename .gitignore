@@ -1,3 +1,4 @@
 vaultwarden/data
 portainer/data
 traefik/data/acme.json
+audit_swarm.txt

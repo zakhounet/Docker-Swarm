@@ -13,7 +13,8 @@ services:
 
   portainer:
     image: portainer/portainer-ee:2.33.6
-    command: -H tcp://tasks.portainer_agent:9001 --tlsskipverify
+    command: 
+      -H tcp://tasks.portainer_agent:9001 --tlsskipverify
     volumes:
       - /mnt/cephfs/docker-cluster/Docker-Swarm/portainer/data:/data
     networks:
@@ -22,6 +23,7 @@ services:
     environment:
       - TZ=Europe/Paris
       - PORTAINER_DATABASE_STRICT_MODE=false
+      - HSTS=false
     deploy:
       mode: replicated
       replicas: 1
@@ -41,11 +43,10 @@ services:
         - "traefik.http.routers.portainer.rule=Host(`portainer.test.teamfnb.com`)"
         - "traefik.http.routers.portainer.entrypoints=websecure"
         - "traefik.http.routers.portainer.tls=true"
-        - "traefik.http.routers.portainer.tls.certresolver=cloudflare"
-        - "traefik.http.routers.portainer.tls.domains[0].main=test.teamfnb.com"
-        - "traefik.http.routers.portainer.tls.domains[0].sans=*.test.teamfnb.com"
         - "traefik.http.services.portainer.loadbalancer.server.port=9000"
         - "traefik.http.services.portainer.loadbalancer.passhostheader=true"
+        - "traefik.http.routers.portainer.middlewares=secHeaders@file"
+        - "traefik.http.routers.portainer.network=proxy"
 
 networks:
   proxy:
