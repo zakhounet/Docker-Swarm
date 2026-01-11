@@ -16,7 +16,8 @@ services:
     command: 
       -H tcp://tasks.portainer_agent:9001 --tlsskipverify
     volumes:
-      - /mnt/cephfs/docker-cluster/Docker-Swarm/portainer/data:/data
+      #- /mnt/cephfs/docker-cluster/Docker-Swarm/portainer/data:/data
+      - "/mnt/portainer-db/data:/data" # <-- Modification ici
     networks:
       - proxy
       - agent_network
@@ -46,7 +47,6 @@ services:
         - "traefik.http.services.portainer.loadbalancer.server.port=9000"
         - "traefik.http.services.portainer.loadbalancer.passhostheader=true"
         - "traefik.http.routers.portainer.middlewares=secHeaders@file"
-        - "traefik.http.routers.portainer.network=proxy"
 
 networks:
   proxy:
