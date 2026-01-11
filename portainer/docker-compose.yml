@@ -17,7 +17,7 @@ services:
       -H tcp://tasks.portainer_agent:9001 --tlsskipverify
     volumes:
       #- /mnt/cephfs/docker-cluster/Docker-Swarm/portainer/data:/data
-      - "/mnt/portainer-db/data:/data" # <-- Modification ici
+      - "/mnt/portainer-db/data:/data" # <-- Modification db outside cephfs
     networks:
       - proxy
       - agent_network
