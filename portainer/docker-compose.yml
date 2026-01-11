@@ -53,4 +53,4 @@ networks:
     external: true
   agent_network:
     driver: overlay
-    attachable: true #test
+    attachable: true # Permet aux conteneurs standalone de se connecter au réseau d'overlay
