@@ -1,0 +1,27 @@
+services:
+  pihole:
+    image: pihole/pihole:latest
+    hostname: "{{.Node.Hostname}}"
+    networks:
+      hostnet: {}
+    environment:
+      - TZ=Europe/Paris
+      # Suppression du 's' pour rester en HTTP sur le port 8080
+      # Cela évite les erreurs de certificats avec NebulaSync
+      - FTLCONF_webserver_port=8080 
+      - FTLCONF_webserver_api_password=password
+    volumes:
+      - /mnt/cephfs/docker-cluster/Docker-Swarm/pihole/config:/etc/pihole
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+          - node.hostname != docker-manager-03
+      restart_policy:
+        condition: on-failure
+
+networks:
+  hostnet:
+    external: true
+    name: host
