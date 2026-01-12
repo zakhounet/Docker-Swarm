@@ -1,7 +1,24 @@
 http:
+  routers:
+    pihole-master:
+      rule: "Host(`pihole.test.teamfnb.com`)"
+      priority: 100
+      entryPoints:
+        - websecure
+      service: pihole-pi4
+      middlewares:
+        - default-headers # <--- On utilise le nouveau nom ici
+      tls:
+        certResolver: cloudflare
+
+  services:
+    pihole-pi4:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.50.104:80"
+
   middlewares:
-    # Headers de sécurité standards (inspirés des bonnes pratiques)
-    secHeaders:
+    default-headers:
       headers:
         frameDeny: true
         browserXssFilter: true
@@ -9,11 +26,8 @@ http:
         forceSTSHeader: true
         stsIncludeSubdomains: true
         stsPreload: true
-        stsSeconds: 3600
-        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none';"
+        stsSeconds: 15552000
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.ui.com https://*.ubnt.com; font-src 'self' data:; connect-src 'self' https://*.ui.com; frame-ancestors 'none';"
         customFrameOptionsValue: SAMEORIGIN
         customRequestHeaders:
           X-Forwarded-Proto: https
-    # Middleware de compression pour la performance
-    traefik-compress:
-      compress: {}

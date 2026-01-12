@@ -3,25 +3,49 @@ services:
     image: pihole/pihole:latest
     hostname: "{{.Node.Hostname}}"
     networks:
-      hostnet: {}
+      - proxy
+    ports:
+      - target: 53
+        published: 53
+        protocol: tcp
+        mode: host
+      - target: 53
+        published: 53
+        protocol: udp
+        mode: host
     environment:
       - TZ=Europe/Paris
-      # Suppression du 's' pour rester en HTTP sur le port 8080
-      # Cela évite les erreurs de certificats avec NebulaSync
-      - FTLCONF_webserver_port=8080 
+      - FTLCONF_webserver_port=8080
       - FTLCONF_webserver_api_password=password
+      - FTLCONF_webserver_domain=pihole.test.teamfnb.com
+      - FTLCONF_webserver_trustedProxies=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - FTLCONF_dns_listeningMode=all
+      - FTLCONF_dns_hostRecord=pihole.test.teamfnb.com,192.168.50.36
     volumes:
       - /mnt/cephfs/docker-cluster/Docker-Swarm/pihole/config:/etc/pihole
     deploy:
-      mode: global
+      mode: replicated
+      replicas: 1
       placement:
         constraints:
           - node.role == manager
-          - node.hostname != docker-manager-03
+          #- node.hostname == docker-manager-01
+      update_config:
+        order: stop-first
       restart_policy:
         condition: on-failure
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=proxy"
+        - "traefik.http.routers.pihole.rule=Host(`pihole.test.teamfnb.com`)"
+        - "traefik.http.routers.pihole.priority=10" # <--- Priorité basse (Backup)
+        - "traefik.http.routers.pihole.entrypoints=websecure"
+        - "traefik.http.routers.pihole.tls=true"
+        - "traefik.http.routers.pihole.tls.certresolver=cloudflare"
+        - "traefik.http.services.pihole.loadbalancer.server.port=8080"
+        - "traefik.http.routers.pihole.middlewares=pihole-proto"
+        - "traefik.http.middlewares.pihole-proto.headers.customrequestheaders.X-Forwarded-Proto=https"
 
 networks:
-  hostnet:
+  proxy:
     external: true
-    name: host

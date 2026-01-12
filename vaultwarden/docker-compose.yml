@@ -21,7 +21,7 @@ services:
         - "traefik.http.routers.vaultwarden.entrypoints=websecure"
         - "traefik.http.routers.vaultwarden.tls=true"
         - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
-        - "traefik.http.routers.NOM_DU_SERVICE.middlewares=secHeaders@file"
+        - "traefik.http.routers.vaultwarden.middlewares=default-headers@file"
 
 networks:
   proxy:

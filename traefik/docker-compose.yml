@@ -5,7 +5,7 @@ services:
       - "--log.level=DEBUG"
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
-      - "--api.dashboard=true"
+
       # --- Provider Swarm ---
       - "--providers.swarm=true"
       - "--providers.swarm.network=proxy"
@@ -29,6 +29,10 @@ services:
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.disablepropagationcheck=true"
 
       - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
+
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
     networks:
       - proxy
     ports:
@@ -42,7 +46,7 @@ services:
         mode: host
     volumes:
       - "/mnt/cephfs/docker-cluster/Docker-Swarm/traefik/data/acme.json:/etc/traefik/acme.json"
-      - "/mnt/cephfs/docker-cluster/Docker-Swarm/traefik/rules:/etc/traefik/rules:ro"
+      - "/mnt/cephfs/docker-cluster/Docker-Swarm/traefik/rules:/etc/traefik/rules:ro,slave"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       
     environment:
@@ -72,9 +76,11 @@ services:
         - "traefik.http.routers.traefik-dash.rule=Host(`traefik-dashboard1.test.teamfnb.com`)"
         - "traefik.http.routers.traefik-dash.service=api@internal"
         - "traefik.http.routers.traefik-dash.entrypoints=websecure"
+        - "traefik.http.routers.traefik-dash.priority=1000"
         - "traefik.http.routers.traefik-dash.tls=true"
+        - "traefik.http.routers.traefik-dash.tls.certresolver=cloudflare"
         - "traefik.http.services.traefik-dash.loadbalancer.server.port=8080"
-        - "traefik.http.routers.traefik-dash.middlewares=secHeaders@file"
+        - "traefik.http.routers.traefik-dash.middlewares=default-headers@file"
     logging:
         driver: "json-file"
         options:
