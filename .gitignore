@@ -3,3 +3,7 @@ portainer/data
 traefik/data/acme.json
 audit_swarm.txt
 pihole/config
+pihole/docker-manager-01/config
+pihole/docker-manager-01/dnsmasq.d
+pihole/docker-manager-02/config
+pihole/docker-manager-02/dnsmasq.d

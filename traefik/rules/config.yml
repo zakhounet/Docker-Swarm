@@ -2,20 +2,23 @@ http:
   routers:
     pihole-master:
       rule: "Host(`pihole.test.teamfnb.com`)"
-      priority: 100
+      # On met une priorité énorme pour être SÛR qu'elle écrase le 10 et le 100
+      priority: 5000 
       entryPoints:
         - websecure
-      service: pihole-pi4
+      # On utilise le nom exact du service qui est VERT sur ton image 1
+      service: pihole@swarm 
       middlewares:
-        - default-headers # <--- On utilise le nouveau nom ici
+        - default-headers
       tls:
         certResolver: cloudflare
 
+  # On peut laisser les définitions de services ici, mais le routeur va les ignorer pour ce test
   services:
-    pihole-pi4:
+    pihole-swarm-internal:
       loadBalancer:
         servers:
-          - url: "http://192.168.50.104:80"
+          - url: "http://pihole_pihole:8080"
 
   middlewares:
     default-headers:
