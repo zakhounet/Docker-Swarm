@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  dns-slave:
+    image: technitium/dns-server:latest
+    hostname: "{{.Node.Hostname}}-dns"
+    networks:
+      - proxy
+    ports:
+      - target: 53
+        published: 53
+        protocol: udp
+        mode: host
+      - target: 53
+        published: 53
+        protocol: tcp
+        mode: host
+      - target: 53443
+        published: 53443
+        protocol: tcp
+        mode: host
+    environment:
+      - DNS_SERVER_ADMIN_PASSWORD=password
+      - DNS_SERVER_PREFER_IPV6=false
+    extra_hosts:
+      - "pi4.cluster.test.teamfnb.com:192.168.50.104"
+    volumes:
+      - /mnt/cephfs/docker-cluster/Docker-Swarm/technitium/config-{{.Node.Hostname}}:/etc/dns
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.labels.dns_node == true
+networks:
+  proxy:
+    external: true

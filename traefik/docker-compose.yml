@@ -1,3 +1,5 @@
+version: '3.9'
+
 services:
   traefik:
     image: traefik:v3.6.5
@@ -5,34 +7,33 @@ services:
       - "--log.level=DEBUG"
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
-
-      # --- Provider Swarm ---
       - "--providers.swarm=true"
       - "--providers.swarm.network=proxy"
       - "--providers.swarm.exposedByDefault=false"
-      # --- Provider File (Approche Lempa) ---
       - "--providers.file.directory=/etc/traefik/rules"
       - "--providers.file.watch=true"
-      # --- Entrypoints ---
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      # --- Certificats Cloudflare (DNS Challenge) ---
-      #- "--certificatesresolvers.cloudflare.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge=true"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.provider=cloudflare"
       - "--certificatesresolvers.cloudflare.acme.email=fnb2@orange.fr"
       - "--certificatesresolvers.cloudflare.acme.storage=/etc/traefik/acme.json"
-      - "--certificatesresolvers.cloudflare.acme.preferredchain=ISRG Root X1" #pour Portainer secure
-      # --- SOLUTIONS SOURCE POUR MODE GLOBAL (Stabilisation) ---
+      - "--certificatesresolvers.cloudflare.acme.preferredchain=ISRG Root X1"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.resolvers=1.1.1.1:53,1.0.0.1:53"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.propagation.delaybeforechecks=60"
       - "--certificatesresolvers.cloudflare.acme.dnschallenge.disablepropagationcheck=true"
-
       - "--providers.swarm.endpoint=unix:///var/run/docker.sock"
-
       - "--api=true"
       - "--api.dashboard=true"
       - "--api.insecure=true"
+
+      - "--certificatesresolvers.technitium.acme.dnschallenge=true"
+      - "--certificatesresolvers.technitium.acme.dnschallenge.provider=technitium"
+      - "--certificatesresolvers.technitium.acme.email=fnb2@orange.fr"
+      - "--certificatesresolvers.technitium.acme.storage=/etc/traefik/acme.json"
+      - "--certificatesresolvers.technitium.acme.dnschallenge.resolvers=192.168.50.104:53,192.168.50.61:53"
     networks:
       - proxy
     ports:
@@ -48,14 +49,15 @@ services:
       - "/mnt/cephfs/docker-cluster/Docker-Swarm/traefik/data/acme.json:/etc/traefik/acme.json"
       - "/mnt/cephfs/docker-cluster/Docker-Swarm/traefik/rules:/etc/traefik/rules:ro,slave"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      
     environment:
       - CF_API_EMAIL=fnb2@orange.fr
       - CF_API_KEY=59caaee466390f1db7c67c90db68d14fc515f
       - TZ=Europe/Paris
+      - LEGO_EXPERIMENTAL_CNAME_SUPPORT=true
+      - TECHNITIUM_API_URL=http://192.168.50.104:5380
+      - TECHNITIUM_API_TOKEN=a72b60e57e9746782820d0077b8b8f1df329e723d160cb2c3f296487d647300c
     deploy:
       mode: global
-      #replicas: 1  # Remplacez temporairement "mode: global" par ceci pour le débogage
       placement:
         constraints:
           - node.role == manager
@@ -67,20 +69,11 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.swarm.network=proxy"
-        # --- Configuration du Certificat Wildcard (Approche Lempa) ---
+        
+        # --- Certificats Wildcard (Maintenus ici pour le cluster) ---
         - "traefik.http.routers.wildcard-certs.tls.certresolver=cloudflare"
         - "traefik.http.routers.wildcard-certs.tls.domains[0].main=test.teamfnb.com"
-        - "traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.test.teamfnb.com, fix.lefix.test.teamfnb.com"
-        
-        # --- Dashboard Traefik ---
-        - "traefik.http.routers.traefik-dash.rule=Host(`traefik-dashboard1.test.teamfnb.com`)"
-        - "traefik.http.routers.traefik-dash.service=api@internal"
-        - "traefik.http.routers.traefik-dash.entrypoints=websecure"
-        - "traefik.http.routers.traefik-dash.priority=1000"
-        - "traefik.http.routers.traefik-dash.tls=true"
-        - "traefik.http.routers.traefik-dash.tls.certresolver=cloudflare"
-        - "traefik.http.services.traefik-dash.loadbalancer.server.port=8080"
-        - "traefik.http.routers.traefik-dash.middlewares=default-headers@file"
+        - "traefik.http.routers.wildcard-certs.tls.domains[0].sans=*.test.teamfnb.com"
     logging:
         driver: "json-file"
         options:

@@ -1,9 +1,8 @@
 vaultwarden/data
 portainer/data
 traefik/data/acme.json
+traefik/logs
 audit_swarm.txt
-pihole/config
-pihole/docker-manager-01/config
-pihole/docker-manager-01/dnsmasq.d
-pihole/docker-manager-02/config
-pihole/docker-manager-02/dnsmasq.d
+technitium/config
+technitium/config-docker-manager-01
+technitium/config-docker-manager-02

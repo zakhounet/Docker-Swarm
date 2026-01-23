@@ -1,26 +1,43 @@
 http:
+  # --- NOUVELLE SECTION : Pour ignorer les erreurs de certificat interne ---
+  serversTransports:
+    technitium-transport:
+      insecureSkipVerify: true
+
   routers:
-    pihole-master:
-      rule: "Host(`pihole.test.teamfnb.com`)"
-      # On met une priorité énorme pour être SÛR qu'elle écrase le 10 et le 100
-      priority: 5000 
+    # --- ROUTER : TRAEFIK DASHBOARD ---
+    traefik-dash:
+      rule: "Host(`traefik-dashboard.test.teamfnb.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`) || PathPrefix(`/`))"
+      priority: 1000
       entryPoints:
         - websecure
-      # On utilise le nom exact du service qui est VERT sur ton image 1
-      service: pihole@swarm 
+      service: api@internal
+      middlewares:
+        - dashboard-redirect
+        - default-headers
+      tls:
+        certResolver: cloudflare
+
+    # --- ROUTER : TECHNITIUM CLUSTER UI ---
+    # AJOUT DES NOMS dns-tom ET dns-zakh ICI
+    technitium-admin:
+      rule: "Host(`technitium.test.teamfnb.com`) || Host(`dns-tom.test.teamfnb.com`) || Host(`dns-zakh.test.teamfnb.com`)"
+      priority: 1000
+      entryPoints:
+        - websecure
+      service: technitium-cluster
       middlewares:
         - default-headers
       tls:
         certResolver: cloudflare
 
-  # On peut laisser les définitions de services ici, mais le routeur va les ignorer pour ce test
-  services:
-    pihole-swarm-internal:
-      loadBalancer:
-        servers:
-          - url: "http://pihole_pihole:8080"
-
   middlewares:
+    dashboard-redirect:
+      redirectRegex:
+        permanent: true
+        regex: "^https://traefik-dashboard.test.teamfnb.com/?$"
+        replacement: "https://traefik-dashboard.test.teamfnb.com/dashboard/"
+
     default-headers:
       headers:
         frameDeny: true
@@ -30,7 +47,22 @@ http:
         stsIncludeSubdomains: true
         stsPreload: true
         stsSeconds: 15552000
-        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.ui.com https://*.ubnt.com; font-src 'self' data:; connect-src 'self' https://*.ui.com; frame-ancestors 'none';"
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.ui.com https://*.ubnt.com; font-src 'self' data:; connect-src 'self' https://*.ui.com; frame-ancestors 'self';"
         customFrameOptionsValue: SAMEORIGIN
         customRequestHeaders:
-          X-Forwarded-Proto: https
+          X-Forwarded-Proto: "https"
+
+  services:
+    # --- SERVICE : LOAD BALANCER TECHNITIUM ---
+    technitium-cluster:
+      loadBalancer:
+        serversTransport: technitium-transport
+        sticky:
+          cookie:
+            name: technitium_session
+            httpOnly: true
+            secure: true
+        servers:
+          - url: "https://192.168.50.104:53443" # Pi4
+          - url: "https://192.168.50.61:53443"  # Tom
+          - url: "https://192.168.50.62:53443"  # Zakh

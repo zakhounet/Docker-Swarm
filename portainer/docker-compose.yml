@@ -44,14 +44,9 @@ services:
         - "traefik.http.routers.portainer.rule=Host(`portainer.test.teamfnb.com`)"
         - "traefik.http.routers.portainer.entrypoints=websecure"
         - "traefik.http.routers.portainer.tls=true"
+        - "traefik.http.routers.portainer.tls.certresolver=cloudflare"
         - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-        # On force le passage du header Host pour éviter les rejets CSRF
-        - "traefik.http.services.portainer.loadbalancer.passhostheader=true"
-        # Ajoute ce middleware de secours pour tester l'Origin
-        - "traefik.http.routers.portainer.middlewares=portainer-headers"
-        - "traefik.http.middlewares.portainer-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
         - "traefik.http.routers.portainer.middlewares=default-headers@file"
-
 networks:
   proxy:
     external: true
