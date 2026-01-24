@@ -1,0 +1,9 @@
+http:
+  # --- TRANSPORT : Pour accepter les certificats self-signed de Technitium ---
+  serversTransports:
+    # Transport pour Technitium (DNS)
+    technitium-transport:
+      insecureSkipVerify: true
+    # Transport pour Proxmox (PVE)
+    pve-transport:
+      insecureSkipVerify: true

@@ -1,0 +1,41 @@
+http:
+  routers:
+    # Router pour Proxmox Tom
+    proxmox-tom:
+      rule: "Host(`tom.test.teamfnb.com`)"
+      service: proxmox-tom-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+      
+    # Router pour Proxmox Zakh
+    proxmox-zakh:
+      rule: "Host(`zakh.test.teamfnb.com`)"
+      service: proxmox-zakh-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+      
+    # Router pour Proxmox Ilan
+    proxmox-ilan:
+      rule: "Host(`ilan.test.teamfnb.com`)"
+      service: proxmox-ilan-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+
+  services:
+    proxmox-tom-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.45:8006" # IP Tom Proxmox
+
+    proxmox-zakh-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.54:8006" # IP Zakh Proxmox
+
+    proxmox-ilan-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.52:8006" # IP Ilan Proxmmox

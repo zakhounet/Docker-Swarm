@@ -1,0 +1,10 @@
+http:
+  routers:
+    # --- ROUTER : TRAEFIK DASHBOARD ---
+    traefik-dash:
+      rule: "Host(`traefik-dashboard.test.teamfnb.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`) || PathPrefix(`/`))"
+      priority: 1000
+      entryPoints: [websecure]
+      service: api@internal # Service interne à Traefik
+      middlewares: [dashboard-redirect, default-headers]
+      tls: { certResolver: cloudflare }

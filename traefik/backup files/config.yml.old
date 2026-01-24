@@ -21,7 +21,7 @@ http:
     # --- ROUTER : TECHNITIUM CLUSTER UI ---
     # AJOUT DES NOMS dns-tom ET dns-zakh ICI
     technitium-admin:
-      rule: "Host(`technitium.test.teamfnb.com`) || Host(`dns-tom.test.teamfnb.com`) || Host(`dns-zakh.test.teamfnb.com`)"
+      rule: "Host(`technitium.test.teamfnb.com`) || Host(`dns-tom.test.teamfnb.com`) || Host(`dns-zakh.test.teamfnb.com`)|| Host(`dns-pi4.test.teamfnb.com`)"
       priority: 1000
       entryPoints:
         - websecure

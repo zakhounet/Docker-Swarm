@@ -1,0 +1,163 @@
+http:
+  # --- TRANSPORT : Pour accepter les certificats self-signed de Technitium ---
+  serversTransports:
+    # Transport pour Technitium (DNS)
+    technitium-transport:
+      insecureSkipVerify: true
+    # Transport pour Proxmox (PVE)
+    pve-transport:
+      insecureSkipVerify: true
+
+  routers:
+    # --- ROUTER : TRAEFIK DASHBOARD ---
+    traefik-dash:
+      rule: "Host(`traefik-dashboard.test.teamfnb.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`) || PathPrefix(`/`))"
+      priority: 1000
+      entryPoints: [websecure]
+      service: api@internal
+      middlewares: [dashboard-redirect, default-headers]
+      tls: { certResolver: cloudflare }
+
+    # --- ROUTER : TECHNITIUM CLUSTER (URL GENERALE) ---
+    technitium-admin:
+      rule: "Host(`technitium.test.teamfnb.com`)"
+      priority: 1000
+      entryPoints: [websecure]
+      service: technitium-cluster
+      middlewares: [default-headers]
+      tls: { certResolver: cloudflare }
+
+    # --- ROUTERS : ACCÈS DIRECTS AUX NŒUDS ---
+    dns-pi4-direct:
+      rule: "Host(`dns-pi4.test.teamfnb.com`)"
+      entryPoints: [websecure]
+      service: technitium-pi4
+      middlewares: [default-headers]
+      tls: { certResolver: cloudflare }
+
+    dns-tom-direct:
+      rule: "Host(`dns-tom.test.teamfnb.com`)"
+      entryPoints: [websecure]
+      service: technitium-tom
+      middlewares: [default-headers]
+      tls: { certResolver: cloudflare }
+
+    dns-zakh-direct:
+      rule: "Host(`dns-zakh.test.teamfnb.com`)"
+      entryPoints: [websecure]
+      service: technitium-zakh
+      middlewares: [default-headers]
+      tls: { certResolver: cloudflare }
+
+    # Router pour Proxmox Tom
+    proxmox-tom:
+      rule: "Host(`tom.test.teamfnb.com`)"
+      service: proxmox-tom-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
+    # Router pour Proxmox Zakh
+    proxmox-zakh:
+      rule: "Host(`zakh.test.teamfnb.com`)"
+      service: proxmox-zakh-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
+    # Router pour Proxmox Ilan
+    proxmox-ilan:
+      rule: "Host(`ilan.test.teamfnb.com`)"
+      service: proxmox-ilan-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
+
+    # Router pour TrueNAS
+    truenas:
+      rule: "Host(`truenas.test.teamfnb.com`)"
+      service: truenas-service
+      entryPoints:
+        - websecure
+      tls:
+        certResolver: cloudflare
+
+  middlewares:
+    dashboard-redirect:
+      redirectRegex:
+        permanent: true
+        regex: "^https://traefik-dashboard.test.teamfnb.com/?$"
+        replacement: "https://traefik-dashboard.test.teamfnb.com/dashboard/"
+
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.ui.com https://*.ubnt.com; font-src 'self' data:; connect-src 'self' https://*.ui.com; frame-ancestors 'self';"
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
+
+  services:
+    # --- SERVICE : LOAD BALANCER (POUR L'URL GÉNÉRALE) ---
+    technitium-cluster:
+      loadBalancer:
+        serversTransport: technitium-transport
+        sticky:
+          cookie:
+            name: technitium_session
+            httpOnly: true
+            secure: true
+        servers:
+          - url: "https://192.168.50.104:53443"
+          - url: "https://192.168.50.61:53443"
+          - url: "https://192.168.50.62:53443"
+
+    # --- SERVICES INDIVIDUELS ---
+    technitium-pi4:
+      loadBalancer:
+        serversTransport: technitium-transport
+        servers:
+          - url: "https://192.168.50.104:53443"
+
+    technitium-tom:
+      loadBalancer:
+        serversTransport: technitium-transport
+        servers:
+          - url: "https://192.168.50.61:53443"
+
+    technitium-zakh:
+      loadBalancer:
+        serversTransport: technitium-transport
+        servers:
+          - url: "https://192.168.50.62:53443"
+
+    proxmox-tom-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.45:8006" # IP Tom Proxmox
+
+    proxmox-zakh-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.54:8006" # IP Zakh Proxmox
+
+    proxmox-ilan-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.52:8006" # IP Ilan Proxmmox
+
+    truenas-service:
+      loadBalancer:
+        serversTransport: pve-transport # On réutilise ce transport pour ignorer le SSL interne
+        servers:
+          - url: "https://192.168.50.55" # Vérifie si ton TrueNAS est bien en HTTPS (.55)

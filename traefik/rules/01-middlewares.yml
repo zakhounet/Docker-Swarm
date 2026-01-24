@@ -1,0 +1,30 @@
+http:
+  middlewares:
+    # --- MIDDLEWARE : REDIRECTION HTTPS DU DASHBOARD ---
+    dashboard-redirect:
+      redirectRegex:
+        permanent: true
+        regex: "^https://traefik-dashboard.test.teamfnb.com/?$"
+        replacement: "https://traefik-dashboard.test.teamfnb.com/dashboard/"
+
+    # --- MIDDLEWARE : HEADERS DE SÉCURITÉ PAR DÉFAUT ---
+    default-headers:
+      headers:
+        frameDeny: true
+        browserXssFilter: true
+        contentTypeNosniff: true
+        forceSTSHeader: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 15552000
+        # --- CONFIGURATION CSP (Content Security Policy) ---
+        # 1. 'self' + unsafe : Assure le cadenas vert sur Chrome tout en permettant 
+        #    le fonctionnement des scripts dynamiques (UniFi, Technitium, Proxmox).
+        # 2. ui.com & ubnt.com : AUTORISE l'affichage des icônes officielles UniFi 
+        #    et la remontée des stats depuis les serveurs Ubiquiti.
+        # 3. frame-ancestors : Protection contre le Clickjacking (interdit l'encapsulation 
+        #    de tes interfaces dans d'autres sites).
+        contentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.ui.com https://*.ubnt.com; font-src 'self' data:; connect-src 'self' https://*.ui.com; frame-ancestors 'self';"
+        customFrameOptionsValue: SAMEORIGIN
+        customRequestHeaders:
+          X-Forwarded-Proto: "https"
