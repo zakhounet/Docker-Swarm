@@ -6,3 +6,5 @@ audit_swarm.txt
 technitium/config
 technitium/config-docker-manager-01
 technitium/config-docker-manager-02
+homarr/redis
+homarr/appdata

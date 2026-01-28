@@ -1,0 +1,93 @@
+version: '3.9'
+
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:latest
+    networks:
+      - proxy
+      - homarr-backend
+    volumes:
+      - /mnt/cephfs/docker-cluster/Docker-Swarm/homarr/appdata:/appdata
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - NODE_ENV=production
+      - DB_DRIVER=node-postgres
+      - DB_DIALECT=postgresql
+      - DB_URL=postgres://homarr:homarr_pass@homarr_db:5432/homarr
+      - REDIS_URL=redis://homarr_redis:6379
+      - AUTH_TRUST_HOST=true
+      - PUID=1000
+      - PGID=1000
+      - AUTH_SECRET=d52321d87dc4afc9f92baf6f001558102d6f26bd1fd80be9d5b8dd84898462ff
+      - SECRET_ENCRYPTION_KEY=4750c4e15a19eabe3b7fb4b1bdeae3c87aa4d018b69b43fab6a360dd69bd2837
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=proxy"
+        - "traefik.http.routers.homarr-router.rule=Host(`dashboard.test.teamfnb.com`)"
+        - "traefik.http.routers.homarr-router.entrypoints=websecure"
+        - "traefik.http.routers.homarr-router.tls.certresolver=cloudflare"
+        - "traefik.http.services.homarr-svc.loadbalancer.server.port=7575"
+
+  db-init:
+    image: alpine:latest
+    user: "root"
+    command: chown -R 70:70 /var/lib/postgresql/data
+    volumes:
+      - type: bind
+        source: /mnt/cephfs/docker-cluster/Docker-Swarm/homarr/postgres_data
+        target: /var/lib/postgresql/data
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 1
+      placement:
+        constraints:
+          - node.role == manager
+
+  db:
+    image: postgres:16-alpine
+    networks:
+      - homarr-backend
+    environment:
+      - POSTGRES_USER=homarr
+      - POSTGRES_PASSWORD=homarr_pass
+      - POSTGRES_DB=homarr
+    volumes:
+      - type: bind
+        source: /mnt/cephfs/docker-cluster/Docker-Swarm/homarr/postgres_data
+        target: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U homarr"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - homarr-backend
+    volumes:
+      - /mnt/cephfs/docker-cluster/Docker-Swarm/homarr/redis:/data
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  proxy:
+    external: true
+  homarr-backend:
+    driver: overlay
+    attachable: true

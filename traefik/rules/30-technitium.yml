@@ -1,4 +1,8 @@
 http:
+  # --- AJOUT ICI : Le transport pour ignorer les erreurs SSL backend ---
+  serversTransports:
+    technitium-transport:
+      insecureSkipVerify: true
   routers:
     # --- ROUTER : TECHNITIUM CLUSTER (URL GENERALE) ---
     technitium-admin:
@@ -42,7 +46,7 @@ http:
             httpOnly: true
             secure: true
         servers:
-          - url: "https://192.168.50.104:53443"
+          - url: "https://192.168.50.104:443"
           - url: "https://192.168.50.61:53443"
           - url: "https://192.168.50.62:53443"
 
@@ -51,7 +55,7 @@ http:
       loadBalancer:
         serversTransport: technitium-transport
         servers:
-          - url: "https://192.168.50.104:53443"
+          - url: "https://192.168.50.104:443"
 
     technitium-tom:
       loadBalancer:

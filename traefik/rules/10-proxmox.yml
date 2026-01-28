@@ -21,6 +21,13 @@ http:
       entryPoints: [websecure]
       tls: { certResolver: cloudflare }
 
+    # Router pour Proxmox PBS
+    proxmox-pbs:
+      rule: "Host(`pbs.test.teamfnb.com`)"
+      service: proxmox-pbs-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+
   services:
     proxmox-tom-service:
       loadBalancer:
@@ -39,3 +46,9 @@ http:
         serversTransport: pve-transport
         servers:
           - url: "https://192.168.0.52:8006" # IP Ilan Proxmmox
+
+    proxmox-pbs-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.50.100:8007" # IP PBS Proxmox
