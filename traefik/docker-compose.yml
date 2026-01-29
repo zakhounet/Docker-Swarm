@@ -65,7 +65,7 @@ services:
       restart_policy:
         condition: on-failure
       labels:
-        - "traefik.enable=true"
+        - "traefik.enable=false"
         - "traefik.swarm.network=proxy"
         
         # --- Certificats Wildcard via Cloudflare ---

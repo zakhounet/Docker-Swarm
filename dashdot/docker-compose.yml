@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  dashdot:
+    image: mauricenino/dashdot:latest
+    networks:
+      - proxy
+    volumes:
+      - /:/mnt/host:ro
+    environment:
+      - DASHDOT_ENABLE_CPU_TEMPS=false
+      # RÉACTIVATION DU WIDGET OS (obligatoire pour voir le nom du host)
+      - DASHDOT_WIDGET_LIST=os,cpu,storage,ram,network
+      - DASHDOT_SHOW_HOST=true
+      - DASHDOT_CUSTOM_HOST={{.Node.Hostname}}
+      - DASHDOT_PAGE_TITLE=Dash - {{.Node.Hostname}}
+      - DASHDOT_ENABLE_SPEEDTEST=false
+      - DASHDOT_SPEEDTEST_INTERVAL=0
+      - DASHDOT_ACCEPT_OOKLA_EULA=true
+      # Nettoyage des labels
+      - DASHDOT_CPU_LABEL_LIST=brand,model,cores,threads
+      - DASHDOT_RAM_LABEL_LIST=size
+      - DASHDOT_NETWORK_LABEL_LIST=speed_up,speed_down
+    deploy:
+      mode: global
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=proxy"
+        # ROUTE GÉNÉRIQUE
+        - "traefik.http.routers.dashdot.rule=Host(`dash.test.teamfnb.com`)"
+        - "traefik.http.routers.dashdot.entrypoints=websecure"
+        - "traefik.http.routers.dashdot.tls.certresolver=cloudflare"
+        - "traefik.http.services.dashdot.loadbalancer.server.port=3001"
+        - "traefik.http.services.dashdot.loadbalancer.sticky=true"
+        - "traefik.http.services.dashdot.loadbalancer.sticky.cookie.name=dash_sticky_session"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  proxy:
+    external: true
