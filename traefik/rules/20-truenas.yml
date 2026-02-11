@@ -5,6 +5,7 @@ http:
       rule: "Host(`truenas.test.teamfnb.com`)"
       service: truenas-service
       entryPoints: [websecure]
+      middlewares: [default-headers]
       tls: { certResolver: cloudflare }
 
   services:
@@ -12,4 +13,4 @@ http:
       loadBalancer:
         serversTransport: pve-transport # On réutilise ce transport pour ignorer le SSL interne
         servers:
-          - url: "https://192.168.50.55" # Vérifie si ton TrueNAS est bien en HTTPS (.55)
+          - url: "https://192.168.50.55:443" # Vérifie si ton TrueNAS est bien en HTTPS (.55)

@@ -1,0 +1,19 @@
+http:
+  routers:
+    homebridge:
+      rule: "Host(`hb.test.teamfnb.com`)"
+      entryPoints: [websecure]
+      service: homebridge-service
+      tls: { certResolver: cloudflare }
+
+  services:
+    homebridge-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.50.61:8581" # IP docker-manager-01 (Tom)
+          - url: "http://192.168.50.62:8581" # IP docker-manager-02 (Zakh)
+          - url: "http://192.168.50.63:8581" # IP docker-manager-03 (Ilan)
+        healthCheck:
+          path: /
+          interval: 10s
+          timeout: 3s

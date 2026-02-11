@@ -8,3 +8,11 @@ technitium/config-docker-manager-01
 technitium/config-docker-manager-02
 homarr/redis
 homarr/appdata
+homebridge/accessories
+homebridge/backups
+homebridge/bwp91_cache
+homebridge/node_modules
+homebridge/persist
+homebridge/homebridge.log
+prometheus/data
+prometheus/grafana_data
