@@ -1,0 +1,38 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'rabbitnut-ups'
+    static_configs:
+      - targets:
+          - '192.168.0.45:8089' # Tom
+          - '192.168.0.54:8089' # Zakh
+          - '192.168.0.52:8089' # Ilan
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: '192.168.0.45:8089'
+        target_label: 'instance'
+        replacement: 'Tom'
+      - source_labels: [__address__]
+        regex: '192.168.0.54:8089'
+        target_label: 'instance'
+        replacement: 'Zakh'
+      - source_labels: [__address__]
+        regex: '192.168.0.52:8089'
+        target_label: 'instance'
+        replacement: 'Ilan'
+  # Futur job Proxmox
+  - job_name: 'proxmox'
+    metrics_path: /pve
+    static_configs:
+      - targets:
+          - '192.168.0.45' # Tom
+          - '192.168.0.54' # Zakh
+          - '192.168.0.52' # Ilan
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: pve-exporter:9221 # On pointe vers le conteneur du Swarm

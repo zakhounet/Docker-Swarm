@@ -7,15 +7,17 @@ services:
       - proxy
     volumes:
       - /:/mnt/host:ro
+      - /sys:/sys:ro           # Indispensable pour les capteurs
+      - /etc/os-release:/etc/os-release:ro
     environment:
-      - DASHDOT_ENABLE_CPU_TEMPS=false
+      - DASHDOT_ENABLE_CPU_TEMPS=true
       # RÉACTIVATION DU WIDGET OS (obligatoire pour voir le nom du host)
       - DASHDOT_WIDGET_LIST=os,cpu,storage,ram,network
       - DASHDOT_SHOW_HOST=true
       - DASHDOT_CUSTOM_HOST={{.Node.Hostname}}
       - DASHDOT_PAGE_TITLE=Dash - {{.Node.Hostname}}
-      - DASHDOT_ENABLE_SPEEDTEST=false
-      - DASHDOT_SPEEDTEST_INTERVAL=0
+      - DASHDOT_ENABLE_SPEEDTEST=true
+      #- DASHDOT_SPEEDTEST_INTERVAL=0
       - DASHDOT_ACCEPT_OOKLA_EULA=true
       # Nettoyage des labels
       - DASHDOT_CPU_LABEL_LIST=brand,model,cores,threads

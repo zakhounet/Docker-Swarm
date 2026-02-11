@@ -1,0 +1,41 @@
+http:
+  routers:
+    # Router pour UDM-SE
+    unifi-udm:
+      rule: "Host(`unifi.test.teamfnb.com`)"
+      service: unifi-udm-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+
+    # Router pour UNAS Pro
+    unifi-unas:
+      rule: "Host(`unas.test.teamfnb.com`)"
+      service: unifi-unas-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+
+    # Router pour UniFi NVR
+    unifi-nvr:
+      rule: "Host(`nvr.test.teamfnb.com`)"
+      service: unifi-nvr-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+
+  services:
+    unifi-udm-service:
+      loadBalancer:
+        serversTransport: pve-transport # Réutilisation de ton transport qui ignore les certificats auto-signés
+        servers:
+          - url: "https://192.168.0.1"
+
+    unifi-unas-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.0.17"
+
+    unifi-nvr-service:
+      loadBalancer:
+        serversTransport: pve-transport
+        servers:
+          - url: "https://192.168.30.100"
