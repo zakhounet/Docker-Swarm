@@ -36,3 +36,14 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: pve-exporter:9221 # On pointe vers le conteneur du Swarm
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['192.168.0.45:9100']
+        labels:
+          instance: 'Tom'
+      - targets: ['192.168.0.54:9100']
+        labels:
+          instance: 'Zakh'
+      - targets: ['192.168.0.52:9100']
+        labels:
+          instance: 'Ilan'
