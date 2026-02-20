@@ -59,10 +59,11 @@ services:
           - node.role == manager
       labels:
           - "traefik.enable=true"
-          - "traefik.docker.network=proxy"
+          - "traefik.swarm.network=proxy"
           - "traefik.http.routers.grafana-router.rule=Host(`grafana.test.teamfnb.com`)"
           - "traefik.http.routers.grafana-router.entrypoints=websecure"
           - "traefik.http.routers.grafana-router.tls.certresolver=cloudflare"
+          - "traefik.http.routers.grafana-router.middlewares=default-headers@file" # AJOUTÉ
           - "traefik.http.services.grafana-svc.loadbalancer.server.port=3000"
 networks:
   proxy:

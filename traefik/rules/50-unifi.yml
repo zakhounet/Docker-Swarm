@@ -21,6 +21,13 @@ http:
       entryPoints: [websecure]
       tls: { certResolver: cloudflare }
 
+    # Router pour Homeassistant
+    homeassistant:
+      rule: "Host(`ha.test.teamfnb.com`)"
+      service: homeassistant-service
+      entryPoints: [websecure]
+      tls: { certResolver: cloudflare }
+
   services:
     unifi-udm-service:
       loadBalancer:
@@ -32,10 +39,16 @@ http:
       loadBalancer:
         serversTransport: pve-transport
         servers:
-          - url: "https://192.168.0.17"
+          - url: "https://192.168.0.17"    
 
     unifi-nvr-service:
       loadBalancer:
         serversTransport: pve-transport
         servers:
           - url: "https://192.168.30.100"
+
+    homeassistant-service:
+      loadBalancer:
+        #serversTransport: pve-transport
+        servers:
+          - url: "http://192.168.0.25:8123"

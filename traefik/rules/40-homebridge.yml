@@ -5,15 +5,30 @@ http:
       entryPoints: [websecure]
       service: homebridge-service
       tls: { certResolver: cloudflare }
+    plex:
+      rule: "Host(`plex.test.teamfnb.com`)"
+      entryPoints: [websecure]
+      service: plex-service
+      tls: { certResolver: cloudflare }
+
 
   services:
     homebridge-service:
       loadBalancer:
-        servers:
-          - url: "http://192.168.50.61:8581" # IP docker-manager-01 (Tom)
-          - url: "http://192.168.50.62:8581" # IP docker-manager-02 (Zakh)
-          - url: "http://192.168.50.63:8581" # IP docker-manager-03 (Ilan)
         healthCheck:
           path: /
+          interval: 60s
+          timeout: 5s
+        servers:
+          - url: "http://192.168.50.36:8581"
+          - url: "http://192.168.50.61:8581"
+          - url: "http://192.168.50.62:8581"
+          - url: "http://192.168.50.63:8581"
+    plex-service:
+      loadBalancer:
+        healthCheck:
+          path: /web/index.html
           interval: 10s
           timeout: 3s
+        servers:
+          - url: "http://192.168.0.135:32400"

@@ -17,17 +17,11 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.swarm.network=proxy"
-        # Vérifie bien que ce nom est celui enregistré sur ton DNS Pi4
         - "traefik.http.routers.vaultwarden.rule=Host(`vault.test.teamfnb.com`)"
         - "traefik.http.routers.vaultwarden.entrypoints=websecure"
-        - "traefik.http.routers.vaultwarden.tls=true"
-        
-        # --- RÉSOLVEUR TECHNITIUM ---
         - "traefik.http.routers.vaultwarden.tls.certresolver=cloudflare"
-        
-        - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
         - "traefik.http.routers.vaultwarden.middlewares=default-headers@file"
-
+        - "traefik.http.services.vaultwarden.loadbalancer.server.port=80"
 networks:
   proxy:
     external: true

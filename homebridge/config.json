@@ -1,22 +1,21 @@
 {
     "bridge": {
-        "name": "Homebridge PI",
-        "username": "0E:43:7D:60:73:13",
-        "port": 51434,
-        "pin": "848-70-353",
-        "advertiser": "ciao",
-        "bind": []
+        "name": "Homebridge Swarm",
+        "username": "0E:59:14:39:82:BA",
+        "port": 51826,
+        "pin": "579-16-619",
+        "advertiser": "ciao"
     },
     "accessories": [],
     "platforms": [
         {
             "name": "Config",
+            "platform": "config",
             "port": 8581,
             "auth": "form",
             "theme": "deep-purple",
             "tempUnits": "c",
-            "lang": "auto",
-            "platform": "config"
+            "lang": "auto"
         },
         {
             "controllers": [
@@ -33,7 +32,7 @@
                 "Enable.Video.DynamicBitrate.Switch"
             ],
             "_bridge": {
-                "username": "0E:9E:C3:CB:84:EF",
+                "username": "0E:9E:C3:CB:84:EE",
                 "port": 42399
             },
             "platform": "UniFi Protect"
@@ -71,7 +70,8 @@
             "disableDeviceLogging": false,
             "_bridge": {
                 "username": "0E:EB:B8:7A:5C:D9",
-                "port": 36266
+                "port": 36266,
+                "name": "Govee F11D"
             },
             "platform": "Govee"
         },
