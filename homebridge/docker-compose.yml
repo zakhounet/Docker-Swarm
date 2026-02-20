@@ -1,7 +1,8 @@
+version: '3.9'
+
 services:
   homebridge:
     image: homebridge/homebridge:latest
-    # Suppression de container_name et restart (gérés par deploy)
     networks:
       - host
     environment:
@@ -15,10 +16,11 @@ services:
     deploy:
       mode: replicated
       replicas: 1
+      update_config:
+        order: stop-first # Crucial pour libérer le port physique avant de relancer
       placement:
         constraints:
           - node.role == manager
-
 networks:
   host:
     external: true

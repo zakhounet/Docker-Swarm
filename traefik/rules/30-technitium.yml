@@ -1,8 +1,4 @@
 http:
-  # --- AJOUT ICI : Le transport pour ignorer les erreurs SSL backend ---
-  serversTransports:
-    technitium-transport:
-      insecureSkipVerify: true
   routers:
     # --- ROUTER : TECHNITIUM CLUSTER (URL GENERALE) ---
     technitium-admin:
@@ -40,6 +36,10 @@ http:
     technitium-cluster:
       loadBalancer:
         serversTransport: technitium-transport
+        healthCheck:
+          path: /
+          interval: 15s
+          timeout: 5s # Un peu plus large pour éviter les 504 au démarrage
         sticky:
           cookie:
             name: technitium_session

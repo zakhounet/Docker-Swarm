@@ -32,6 +32,7 @@ services:
         - "traefik.http.routers.homarr-router.rule=Host(`dashboard.test.teamfnb.com`)"
         - "traefik.http.routers.homarr-router.entrypoints=websecure"
         - "traefik.http.routers.homarr-router.tls.certresolver=cloudflare"
+        - "traefik.http.routers.homarr-router.middlewares=default-headers@file" # AJOUTÉ
         - "traefik.http.services.homarr-svc.loadbalancer.server.port=7575"
 
   db-init:
