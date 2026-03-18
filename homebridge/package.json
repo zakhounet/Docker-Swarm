@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@homebridge-plugins/homebridge-govee": "^11.15.0",
+    "@homebridge-plugins/homebridge-govee": "11.17.0",
     "homebridge": "1.11.2",
     "homebridge-levoit-air-purifier": "3.1.1",
     "homebridge-samsung-tizen": "5.3.3",
