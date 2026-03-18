@@ -16,3 +16,5 @@ homebridge/persist
 homebridge/homebridge.log
 prometheus/data
 prometheus/grafana_data
+homebridge/.uix-dashboard.json
+homebridge/package.json
