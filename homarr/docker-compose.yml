@@ -10,7 +10,9 @@ services:
       - /mnt/cephfs/docker-cluster/Docker-Swarm/homarr/appdata:/appdata
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      - ALLOW_EXTERNAL_ICONS=true
       - NODE_ENV=production
+      - APP_URL=https://dashboard.test.teamfnb.com
       - DB_DRIVER=node-postgres
       - DB_DIALECT=postgresql
       - DB_URL=postgres://homarr:homarr_pass@homarr_db:5432/homarr
