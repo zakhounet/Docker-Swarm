@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@homebridge-plugins/homebridge-govee": "^11.18.0",
+    "@homebridge-plugins/homebridge-govee": "11.21.0",
     "homebridge": "1.11.4",
     "homebridge-levoit-air-purifier": "3.1.1",
-    "homebridge-samsung-tizen": "5.3.3",
-    "homebridge-unifi-protect": "7.28.0"
+    "homebridge-samsung-tizen": "5.3.5",
+    "homebridge-unifi-protect": "7.29.0"
   }
 }

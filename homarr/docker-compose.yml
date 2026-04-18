@@ -1,6 +1,6 @@
 services:
   homarr:
-    image: ghcr.io/homarr-labs/homarr:latest
+    image: ghcr.io/homarr-labs/homarr:v1.59.2
     networks:
       - proxy
       - homarr-backend
