@@ -28,3 +28,10 @@ http:
         customFrameOptionsValue: "ALLOW-FROM https://*.test.teamfnb.com"
         customRequestHeaders:
           X-Forwarded-Proto: "https"
+    # --- MIDDLEWARE : NVR Pour Chrome --- 
+    nvr-headers:
+      headers:
+        customRequestHeaders:
+          Origin: "https://192.168.30.100"
+          Referer: "https://192.168.30.100/"
+          X-Forwarded-Proto: "https"

@@ -1,6 +1,6 @@
 services:
   dns-slave:
-    image: technitium/dns-server:latest
+    image: technitium/dns-server:15.2.0
     hostname: "{{.Node.Hostname}}-dns"
     networks:
       - proxy

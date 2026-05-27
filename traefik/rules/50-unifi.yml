@@ -20,6 +20,8 @@ http:
       service: unifi-nvr-service
       entryPoints: [websecure]
       tls: { certResolver: cloudflare }
+      # middlewares:
+      #   - nvr-headers
 
     # Router pour Homeassistant
     homeassistant:
@@ -37,6 +39,7 @@ http:
 
     unifi-unas-service:
       loadBalancer:
+        #passHostHeader: false
         serversTransport: pve-transport
         servers:
           - url: "https://192.168.0.17"    
