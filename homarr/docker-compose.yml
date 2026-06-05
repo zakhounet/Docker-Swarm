@@ -13,13 +13,13 @@ services:
       - APP_URL=https://dashboard.test.teamfnb.com
       - DB_DRIVER=node-postgres
       - DB_DIALECT=postgresql
-      - DB_URL=postgres://homarr:homarr_pass@homarr_db:5432/homarr
+      - DB_URL=postgres://homarr:${DB_PASSWORD}@homarr_db:5432/homarr
       - REDIS_URL=redis://homarr_redis:6379
       - AUTH_TRUST_HOST=true
       - PUID=1000
       - PGID=1000
-      - AUTH_SECRET=d52321d87dc4afc9f92baf6f001558102d6f26bd1fd80be9d5b8dd84898462ff
-      - SECRET_ENCRYPTION_KEY=4750c4e15a19eabe3b7fb4b1bdeae3c87aa4d018b69b43fab6a360dd69bd2837
+      - AUTH_SECRET=${AUTH_SECRET}
+      - SECRET_ENCRYPTION_KEY=${SECRET_ENCRYPTION_KEY}
     deploy:
       mode: replicated
       replicas: 1
@@ -59,7 +59,7 @@ services:
       - homarr-backend
     environment:
       - POSTGRES_USER=homarr
-      - POSTGRES_PASSWORD=homarr_pass
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
       - POSTGRES_DB=homarr
     volumes:
       - type: bind
