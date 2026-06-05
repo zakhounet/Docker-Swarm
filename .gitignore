@@ -27,3 +27,4 @@ prometheus/pve.yml
 homebridge/config.json
 traefik/.env
 homarr/.env
+termix/data/
