@@ -26,3 +26,5 @@ homebridge/.uix-secretsprometheus/pve.yml
 homebridge/config.json
 bfg-1.14.0.jar
 ..bfg-report/
+traefik/.env
+traefik/.env
