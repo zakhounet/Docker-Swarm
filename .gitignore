@@ -24,3 +24,5 @@ homebridge/.daikin-controller-cloud-tokenset
 homebridge/auth.json
 homebridge/.uix-secretsprometheus/pve.yml
 homebridge/config.json
+bfg-1.14.0.jar
+..bfg-report/
