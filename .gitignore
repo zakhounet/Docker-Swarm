@@ -20,3 +20,5 @@ homebridge/.uix-dashboard.json
 homebridge/package.json
 homebridge/.uix-dashboard.json
 homebridge/package.json
+termix/data/opkssh/
+termix/data/
