@@ -1,5 +1,0 @@
-default:
-    user: prometheus@pve
-    token_name: monitoring
-    token_value: "73033c13-9193-4d89-9e86-73b42a9b6df7"
-    verify_ssl: false # Important pour Proxmox 9 avec certificats auto-signés

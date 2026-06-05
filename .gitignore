@@ -22,4 +22,4 @@ termix/data/opkssh/
 homebridge/daikincloudtokenset.json
 homebridge/.daikin-controller-cloud-tokenset
 homebridge/auth.json
-homebridge/.uix-secrets
+homebridge/.uix-secretsprometheus/pve.yml
