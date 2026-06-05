@@ -22,9 +22,10 @@ termix/data/opkssh/
 homebridge/daikincloudtokenset.json
 homebridge/.daikin-controller-cloud-tokenset
 homebridge/auth.json
-homebridge/.uix-secretsprometheus/pve.yml
+homebridge/.uix-secrets
+prometheus/pve.yml
 homebridge/config.json
+traefik/.env
+homarr/.env
 bfg-1.14.0.jar
 ..bfg-report/
-traefik/.env
-traefik/.env
