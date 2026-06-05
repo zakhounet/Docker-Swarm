@@ -27,5 +27,3 @@ prometheus/pve.yml
 homebridge/config.json
 traefik/.env
 homarr/.env
-bfg-1.14.0.jar
-..bfg-report/
