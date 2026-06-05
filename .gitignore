@@ -18,7 +18,8 @@ prometheus/data
 prometheus/grafana_data
 homebridge/.uix-dashboard.json
 homebridge/package.json
-homebridge/.uix-dashboard.json
-homebridge/package.json
 termix/data/opkssh/
-termix/data/
+homebridge/daikincloudtokenset.json
+homebridge/.daikin-controller-cloud-tokenset
+homebridge/auth.json
+homebridge/.uix-secrets
