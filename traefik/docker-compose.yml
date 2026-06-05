@@ -46,12 +46,11 @@ services:
       - "/mnt/cephfs/docker-cluster/Docker-Swarm/traefik/rules:/etc/traefik/rules:ro,slave"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     environment:
-      - CF_API_EMAIL=fnb2@orange.fr
-      - CF_API_KEY=59caaee466390f1db7c67c90db68d14fc515f
+      - CF_DNS_API_TOKEN=${CF_DNS_API_TOKEN}
       - TZ=Europe/Paris
       - LEGO_EXPERIMENTAL_CNAME_SUPPORT=true
-      - TECHNITIUM_API_URL=http://192.168.50.104:5380
-      - TECHNITIUM_API_TOKEN=a72b60e57e9746782820d0077b8b8f1df329e723d160cb2c3f296487d647300c
+      - TECHNITIUM_API_URL=${TECHNITIUM_API_URL}
+      - TECHNITIUM_API_TOKEN=${TECHNITIUM_API_TOKEN}
     deploy:
       mode: global
       placement:
