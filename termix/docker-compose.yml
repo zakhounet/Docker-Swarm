@@ -9,8 +9,6 @@ services:
     environment:
       - PORT=8080
       - TZ=Europe/Paris
-    depends_on:
-      - guacd
     deploy:
       mode: replicated
       replicas: 1
@@ -31,8 +29,7 @@ services:
     networks:
       - termix-net
     deploy:
-      mode: replicated
-      replicas: 1
+      mode: global
       placement:
         constraints:
           - node.role == manager
