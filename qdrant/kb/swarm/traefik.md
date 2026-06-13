@@ -57,3 +57,4 @@ Le service `technitium-cluster` répartit l'UI entre Pi4 (.104:443) et les insta
 ## Ports publiés en mode host
 
 Les entrypoints 80/443 sont publiés en `mode: host` (pas ingress) sur chaque manager — nécessaire pour préserver les IPs sources réelles et pour Keepalived/VIP. Conséquence : Traefik doit tourner en mode Global (une instance par manager).
+
