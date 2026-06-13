@@ -34,4 +34,4 @@ http:
         customRequestHeaders:
           Origin: "https://192.168.30.100"
           Referer: "https://192.168.30.100/"
-          X-Forwarded-Proto: "https"
+          X-Forwarded-Proto: "https" 
