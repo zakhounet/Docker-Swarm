@@ -30,3 +30,4 @@ homarr/.env
 termix/data/
 qdrant/kb
 qdrant/storage
+qdrant/.env
