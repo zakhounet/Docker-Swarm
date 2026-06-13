@@ -78,3 +78,4 @@ bash -c 'commande | pipe > fichier'
 ```
 
 Le M1 n'a pas de route directe vers le réseau 192.168.50.x pour certains services (ex. API Technitium) — passer par SSH via docker-manager-01.
+
