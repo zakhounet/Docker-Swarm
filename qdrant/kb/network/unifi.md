@@ -45,3 +45,4 @@ Recommandation validée : min_rssi à -75 dBm sur les APs Bureau et Etage (2.4 G
 ## Suivi ouvert : STP Edge ports
 
 Configuration des ports STP Edge sur le USW-Ultra et les Flex 2.5G à finaliser (follow-up planifié).
+ 
