@@ -1,0 +1,25 @@
+services:
+  searxng:
+    image: searxng/searxng:latest
+    networks:
+      - proxy
+    volumes:
+      - /mnt/cephfs/docker-cluster/Docker-Swarm/searxng/config:/etc/searxng:rw
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - traefik.enable=true
+        - traefik.swarm.network=proxy
+        - "traefik.http.routers.searxng.rule=Host(`searxng.test.teamfnb.com`)"
+        - traefik.http.routers.searxng.entrypoints=websecure
+        - traefik.http.routers.searxng.tls.certresolver=cloudflare
+        - traefik.http.routers.searxng.middlewares=default-headers@file
+        - traefik.http.services.searxng.loadbalancer.server.port=8080
+
+networks:
+  proxy:
+    external: true

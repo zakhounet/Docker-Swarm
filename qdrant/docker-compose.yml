@@ -1,0 +1,46 @@
+services:
+  qdrant:
+    image: qdrant/qdrant:v1.18.2
+    networks:
+      - proxy
+    ports:
+      # gRPC en accès direct LAN (ne passe pas par Traefik)
+      - target: 6334
+        published: 6334
+        protocol: tcp
+        mode: host
+    volumes:
+      - /mnt/cephfs/docker-cluster/Docker-Swarm/qdrant/storage:/qdrant/storage
+    environment:
+      - TZ=Europe/Paris
+      # API key à définir via .env : set -a && source qdrant/.env && set +a
+      - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+      update_config:
+        parallelism: 1
+        order: stop-first # une seule instance sur stockage partagé : éviter 2 writers simultanés
+      labels:
+        - "traefik.enable=true"
+        - "traefik.swarm.network=proxy"
+        - "traefik.http.routers.qdrant.rule=Host(`qdrant.test.teamfnb.com`)"
+        - "traefik.http.routers.qdrant.entrypoints=websecure"
+        - "traefik.http.routers.qdrant.tls.certresolver=cloudflare"
+        - "traefik.http.routers.qdrant.middlewares=default-headers@file"
+        - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  proxy:
+    external: true
