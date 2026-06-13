@@ -28,6 +28,5 @@ homebridge/config.json
 traefik/.env
 homarr/.env
 termix/data/
-qdrant/kb
 qdrant/storage
 qdrant/.env
