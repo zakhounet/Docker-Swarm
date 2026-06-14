@@ -9,7 +9,7 @@
 
 | VMID | Nom | Type | Nœud | CPU | RAM | Disque | Status | Tags |
 |---|---|---|---|---|---|---|---|---|
-| 105 | Terramaster-Cloudflare | LXC | Zakh | 2 | 1 Go | 10 Go | ✅ running | 235 |
+| 105 | Terramaster-Cloudflare | LXC | Zakh | 2 | 1 Go | 10 Go | ⚠️ running (à fermer) | 235 |
 | 110 | Docker | VM | Tom | 6 | 24 Go | 250 Go | ✅ running | 50-97 |
 | 199 | test-ssh | VM | Ilan | 2 | 4 Go | 32 Go | ✅ running | — |
 | 400 | Plex | LXC | Zakh | 4 | 8 Go | 20 Go | ✅ running | oci |
@@ -34,11 +34,12 @@
 - **Réseau** : `vmbr0` (admin), firewall activé, MAC `BC:24:11:B8:A5:2F`
 - **onboot** : ✅
 
-### LXC 105 — Terramaster-Cloudflare (Zakh)
-- **Rôle** : Conteneur Cloudflare tunnel/Terramaster — tag `235`
+### LXC 105 — Terramaster-Cloudflare (Zakh) ⚠️ À fermer
+- **Rôle** : Tunnel Cloudflare uniquement (le NAS Terramaster n'est plus utilisé) — **à supprimer**
 - **CPU** : 2 vCPU | **RAM** : 1 Go | **Disque** : 10 Go (CephRBD)
 - **Réseau** : `vmbr0`, DHCP, firewall activé
-- **onboot** : ✅
+- **onboot** : ✅ (sera désactivé à la suppression)
+- **Note** : Le tunnel Cloudflare est désormais assuré par le service launchd sur le M4 Pro (`hermes-webhook.teamfnb.com`)
 
 ### LXC 400 — Plex (Zakh)
 - **Rôle** : Conteneur OCI Plex Media Server — tag `oci`
