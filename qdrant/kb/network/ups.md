@@ -33,5 +33,5 @@
 
 ## ⚠️ Points d'attention
 
-- **Alarme `Battery voltage too low`** active malgré 100% de charge — anomalie à investiguer (possible fausse alarme NUT ou batterie vieillissante)
-- 470W de charge sur l'UPS — à identifier quels équipements sont branchés dessus
+- **Alarme NUT `Battery voltage too low`** active alors que la batterie est à 100% — probablement une fausse alarme ou un souci de calibration NUT. La charge à 49% (470W) est normale.
+- 470W sur une capacité nominale → vérifier quelle est la puissance nominale de l'Ellipse pour estimer la marge restante
