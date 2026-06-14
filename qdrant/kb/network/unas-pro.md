@@ -81,11 +81,14 @@ DNS configurés : 192.168.0.36, 192.168.0.104, 1.1.1.1, 192.168.50.61, 192.168.5
 ## 📂 Partages & Services
 
 ### Services actifs
-| Service | État |
-|---|---|
-| SMB (Samba) | ✅ Actif |
-| NFS | ✅ Actif |
-| rclone daemon | ✅ Actif (`/data/unifi-drive/rclone/rclone.conf`) |
+| Service | État | Notes |
+|---|---|---|
+| SMB (Samba) | ✅ Actif | Port 445 |
+| NFS | ✅ Actif | 8 workers |
+| rsync daemon | ✅ Actif | Via rsyncd, config auto-générée |
+| Time Machine | ✅ Actif | Via SMB + Avahi/Bonjour (`fruit:time machine = yes`) |
+| rclone daemon | ✅ Actif | Socket unix `//@unifi-drive-rclone` |
+| Avahi (mDNS) | ✅ Actif | Annonce SMB + Time Machine sur le réseau local |
 
 ### Partages SMB
 
@@ -101,6 +104,20 @@ DNS configurés : 192.168.0.36, 192.168.0.104, 1.1.1.1, 192.168.50.61, 192.168.5
 |---|---|---|
 | `Shared_Drive_Example/.data` | 192.168.0.125 | rw, root_squash, all_squash |
 | `Shared_Drive_Example/.data` | 192.168.0.25 (Home Assistant) | rw, root_squash, all_squash |
+
+### Modules rsync (`/etc/rsyncd.conf`)
+
+| Module | Chemin | Type |
+|---|---|---|
+| `Shared_Drive_Example` | `.../Shared_Drive_Example/.data` | Partagé (rw) |
+| `Franck Boutboul` | `.../homes/uisys-.../.data` | Personnel (rw) |
+| `kyftherock` | `.../homes/kyftherock/.data` | Personnel (rw) |
+| `kyfran` | `.../homes/kyfran/.data` | Personnel (rw) |
+
+### Time Machine (Avahi)
+Annonces mDNS sur le réseau local :
+- `Personal-Drive` — Time Machine activé (`adVF=0x82`)
+- `Shared_Drive_Example` — Time Machine activé (`adVF=0x82`)
 
 ### Utilisateurs UniFi Drive
 | Username | Rôle |
