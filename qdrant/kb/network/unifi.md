@@ -47,4 +47,10 @@ Méthode : `PUT /proxy/network/api/s/default/rest/device/{_id}` avec `radio_tabl
 ## STP Edge ports : non applicable
 
 USW-Ultra et USW Flex 2.5G ne supportent pas la configuration STP Edge — limitation hardware de ces modèles. Pas d'action possible.
- 
+
+---
+
+## WPA3 : non applicable en contexte IoT
+
+WPA3 non activé sur les SSIDs — la majorité des équipements IoT (ESP8266/ESP32, prises, ampoules, capteurs) ne supportent que WPA2. Même le mode transition WPA2/WPA3 peut faire décrocher certains chipsets bas de gamme. Statu quo WPA2-PSK maintenu sur tous les SSIDs.
+
