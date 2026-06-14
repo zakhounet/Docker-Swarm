@@ -10,8 +10,8 @@
 | VMID | Nom | Type | Nœud | CPU | RAM | Disque | Status | Tags |
 |---|---|---|---|---|---|---|---|---|
 | 105 | Terramaster-Cloudflare | LXC | Zakh | 2 | 1 Go | 10 Go | ⚠️ running (à fermer) | 235 |
-| 110 | Docker | VM | Tom | 6 | 24 Go | 250 Go | ✅ running | 50-97 |
-| 199 | test-ssh | VM | Ilan | 2 | 4 Go | 32 Go | ✅ running | — |
+| 110 | Docker | VM | Tom | 6 | 24 Go | 250 Go | ⚠️ running (à fermer) | 50-97 |
+| 199 | test-ssh | VM | Ilan | 2 | 4 Go | 32 Go | ⚠️ running (tests uniquement) | — |
 | 400 | Plex | LXC | Zakh | 4 | 8 Go | 20 Go | ✅ running | oci |
 | 601 | docker-manager-01 | VM | Tom | 4 | 16 Go | 100 Go | ✅ running | swarm |
 | 602 | docker-manager-02 | VM | Zakh | 4 | 16 Go | 100 Go | ✅ running | swarm |
@@ -22,14 +22,14 @@
 
 ## Détail par VM / LXC
 
-### VM 110 — Docker (Tom)
-- **Rôle** : VM Docker standalone (hors Swarm) — tag `50-97`
+### VM 110 — Docker (Tom) ⚠️ À fermer
+- **Rôle** : VM Docker standalone — **à supprimer**
 - **CPU** : 6 vCPU | **RAM** : 24 Go | **Disque** : 250 Go (CephRBD, SSD, discard, iothread)
 - **Réseau** : `vmbr1` (VLAN prod 20 Gbps), MAC `BC:24:11:26:79:DD`
-- **onboot** : ✅
+- **onboot** : ✅ (sera désactivé à la suppression)
 
-### VM 199 — test-ssh (Ilan)
-- **Rôle** : VM de test SSH
+### VM 199 — test-ssh (Ilan) ⚠️ Tests uniquement
+- **Rôle** : VM de test SSH — non critique, pas de service en production
 - **CPU** : 2 vCPU | **RAM** : 4 Go | **Disque** : 32 Go (TrueNAS NFS, qcow2)
 - **Réseau** : `vmbr0` (admin), firewall activé, MAC `BC:24:11:B8:A5:2F`
 - **onboot** : ✅
