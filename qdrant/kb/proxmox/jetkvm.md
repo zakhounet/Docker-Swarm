@@ -68,6 +68,6 @@ Accès local uniquement (Cloud désactivé sur les 3). Interface web sur `http:/
 
 ## ⚠️ Points d'attention
 
-- **Ilan (0.5.9-dev)** : firmware de développement — moins stable que 0.5.8 stable
+- **Ilan (0.5.9-dev)** : firmware dev — premier JetKVM du homelab, était sur le dev channel. Canal dev désactivé depuis. Pas de rollback manuel possible ; la prochaine release stable (>0.5.9) s'appliquera automatiquement. Pas une anomalie.
 - **Cloud désactivé** sur les 3 : accès uniquement depuis le LAN ou VPN WireGuard
 - **Sessions actives uniquement depuis 192.168.0.93** (Mac mini M4) — pas depuis le M4 Pro (192.168.0.37)
