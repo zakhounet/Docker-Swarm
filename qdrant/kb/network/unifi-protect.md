@@ -22,12 +22,13 @@
 | Mode allocation | Balanced (50% HQ) |
 | Recyclage actif | Oui |
 
-### Disques
-| Modèle | Taille | État |
-|---|---|---|
-| Toshiba MG08ADA800E | 8 To | ✅ Good |
-| WDC WD85PURZ-85C4WY0 | 8 To | ✅ Good |
-| Toshiba HDWG480 | 8 To | ✅ Good |
+### Disques (4 slots)
+| Slot | Modèle | Taille | État |
+|---|---|---|---|
+| 1 | Toshiba MG08ADA800E | 8 To | ✅ Good |
+| 2 | WDC WD85PURZ-85C4WY0 | 8 To | ✅ Good |
+| 3 | — | — | ⚠️ Non reconnu (API retourne `{}`) |
+| 4 | Toshiba HDWG480 | 8 To | ✅ Good |
 
 ---
 
