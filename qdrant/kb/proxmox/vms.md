@@ -42,9 +42,12 @@
 - **Note** : Le tunnel Cloudflare est désormais assuré par le service launchd sur le M4 Pro (`hermes-webhook.teamfnb.com`)
 
 ### LXC 400 — Plex (Zakh)
-- **Rôle** : Conteneur OCI Plex Media Server — tag `oci`
-- **CPU** : 4 vCPU | **RAM** : 8 Go | **Disque** : 20 Go (CephRBD)
-- **Réseau** : `vmbr0`, IP fixe 192.168.0.x, gateway 192.168.0.1, host-managed
+- **Rôle** : Serveur Plex **de backup** (OCI container — tag `oci`)
+- **OS** : Ubuntu (unprivileged, nesting=1)
+- **CPU** : 4 vCPU | **RAM** : 8 Go + 512 Mo swap | **Disque** : 20 Go (CephRBD)
+- **Réseau** : `vmbr0`, IP fixe **192.168.0.135/24**, gateway 192.168.0.1, firewall activé
+- **GPU passthrough** : `/dev/dri/renderD128` (Intel Iris Xe — transcodage hardware), uid/gid=911
+- **Montage médias** : `/mnt/pve/Multimedia` → monté sur `/media/library` dans le conteneur
 - **onboot** : ✅
 
 ### VM 601 — docker-manager-01 (Tom)
