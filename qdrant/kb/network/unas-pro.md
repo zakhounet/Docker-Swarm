@@ -78,12 +78,72 @@ DNS configurés : 192.168.0.36, 192.168.0.104, 1.1.1.1, 192.168.50.61, 192.168.5
 
 ---
 
-## 🔒 Sécurité
+## 📂 Partages & Services
 
-- SSH activé
+### Services actifs
+| Service | État |
+|---|---|
+| SMB (Samba) | ✅ Actif |
+| NFS | ✅ Actif |
+| rclone daemon | ✅ Actif (`/data/unifi-drive/rclone/rclone.conf`) |
+
+### Partages SMB
+
+| Nom | Chemin | Accès | Time Machine |
+|---|---|---|---|
+| Personal-Drive | `%H/.data` (home de chaque user) | Utilisateurs UniFi Drive | ✅ |
+| Shared_Drive_Example | `/volume/.../Shared_Drive_Example/.data` | kyftherock, kyfran | ✅ |
+| unifi-drive-backup-only | `/srv/.unifi-drive/homes/` | unifi-drive-backup (backup distant) | — |
+
+### Exports NFS
+
+| Chemin exporté | Client | Options |
+|---|---|---|
+| `Shared_Drive_Example/.data` | 192.168.0.125 | rw, root_squash, all_squash |
+| `Shared_Drive_Example/.data` | 192.168.0.25 (Home Assistant) | rw, root_squash, all_squash |
+
+### Utilisateurs UniFi Drive
+| Username | Rôle |
+|---|---|
+| kyftherock | Admin |
+| kyfran | Utilisateur |
+| uisys-muiq4bdm0l1hh70q12djv0hn8c | Compte système SSO (Franck Boutboul) |
+
+---
+
+## 💽 Système de fichiers
+
+| Point de montage | Dispositif | Taille | Utilisé | Dispo |
+|---|---|---|---|---|
+| `/volume/200f81cd-...` | `/dev/md3` (RAID 5) | 28 To | 17 To | 11 To (63%) |
+| `/` (overlay) | overlayfs | 24 Go | 6.3 Go | 17 Go |
+| `/boot/firmware` | eMMC | 2 Go | 1.3 Go | 592 Mo |
+| `/var/log` | partition log | 974 Mo | 170 Mo | 737 Mo |
+
+Structure du volume principal :
+```
+/volume/200f81cd-.../
+└── .srv/
+    └── .unifi-drive/
+        ├── Shared_Drive_Example/
+        │   └── .data/         ← partage SMB + NFS
+        ├── homes/
+        │   ├── kyftherock/
+        │   ├── kyfran/
+        │   └── uisys-.../
+        └── .archives/         ← archives chiffrées
+```
+
+---
+
+## 🔒 Sécurité & Accès
+
+- SSH activé — user `root`, password auth
 - Accès local : https://192.168.0.17
 - Accès interne : https://unas.test.teamfnb.com
-- Connecté au réseau Main (192.168.0.0/24) via 10G SFP+
+- Réseau Main (192.168.0.0/24) via 10G SFP+
+- SMB : authentification obligatoire (`map to guest = never`)
+- NFS : restricted to 192.168.0.125 et 192.168.0.25
 
 ---
 
@@ -92,3 +152,4 @@ DNS configurés : 192.168.0.36, 192.168.0.104, 1.1.1.1, 192.168.50.61, 192.168.5
 - **CPU à 81°C** — températures à surveiller
 - **Disque slot 2** : 17 149h (le plus usé de l'ensemble)
 - **enp0s1 (ETH)** non connecté — seul le SFP+ 10G est actif
+- **Volume à 63%** — encore de la marge mais à surveiller avec rclone
