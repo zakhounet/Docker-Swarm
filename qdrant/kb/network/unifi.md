@@ -3,7 +3,7 @@
 > **Source** : sessions Claude 2025-2026
 > **Matériel** : UDM-SE (192.168.0.1), NVR Protect (192.168.30.100) — deux hôtes distincts, deux MCP distincts (unifi-network-mcp / unifi-protect-mcp). WireGuard VPN : 192.168.200.0/24
 > **Version Network** : 10.4.x
-> **Dernière mise à jour** : 2026-06-10
+> **Dernière mise à jour** : 2026-06-14
 
 ---
 
@@ -38,11 +38,13 @@ Le VLAN NVR/caméras est placé en zone Untrusted. Pour l'accès depuis le VPN (
 
 ## Gestion de bande 2.4 GHz : min_rssi
 
-Recommandation validée : min_rssi à -75 dBm sur les APs Bureau et Etage (2.4 GHz) pour forcer les clients distants à basculer sur un AP plus proche. Action encore ouverte.
+✅ **Appliqué le 2026-06-14** — min_rssi à -75 dBm activé sur U7 Pro Max Bureau (.15) et U7 Pro Max Étage (.16), bande 2.4 GHz (radio `ng`). Les clients trop faibles sont kickés et se raccrochent à l'AP le plus proche.
+
+Méthode : `PUT /proxy/network/api/s/default/rest/device/{_id}` avec `radio_table` patchée (`min_rssi_enabled: true`, `min_rssi: -75`). Pas via MCP radio — direct API curl.
 
 ---
 
-## Suivi ouvert : STP Edge ports
+## STP Edge ports : non applicable
 
-Configuration des ports STP Edge sur le USW-Ultra et les Flex 2.5G à finaliser (follow-up planifié).
+USW-Ultra et USW Flex 2.5G ne supportent pas la configuration STP Edge — limitation hardware de ces modèles. Pas d'action possible.
  
