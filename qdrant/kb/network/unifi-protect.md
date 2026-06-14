@@ -27,7 +27,7 @@
 |---|---|---|---|
 | 1 | Toshiba MG08ADA800E | 8 To | ✅ Good |
 | 2 | WDC WD85PURZ-85C4WY0 | 8 To | ✅ Good |
-| 3 | — | — | ⚠️ Non reconnu (API retourne `{}`) |
+| 3 | — | — | ❌ DOWN (disque défaillant) |
 | 4 | Toshiba HDWG480 | 8 To | ✅ Good |
 
 ---
