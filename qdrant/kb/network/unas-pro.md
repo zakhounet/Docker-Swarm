@@ -1,172 +1,163 @@
-# UniFi UNAS Pro — NAS
+# UNAS Pro — Snapshot KB
 
-> Généré automatiquement depuis l'API UniFi OS — 192.168.0.17
-> Dernière mise à jour : juin 2026
+> Généré automatiquement par cron `unas-kb-refresh` — **2026-06-15**
+> Sources : API `/api/system` + SSH root@192.168.0.17
 
 ---
 
-## 📦 Matériel
+## Identité
 
-| Propriété | Valeur |
+| Paramètre | Valeur |
 |---|---|
-| Modèle | UNAS Pro (UNASPRO) |
+| Nom | UNAS Pro |
+| Modèle | UniFi Network Attached Storage Pro (UNASPRO) |
 | Hostname | UNAS-Pro |
-| IP | 192.168.0.17 (Main — 192.168.0.0/24) |
-| Accès | https://unas.test.teamfnb.com |
+| IP principale | 192.168.0.17 |
 | MAC | 0C:EA:14:EA:08:D4 |
-| Firmware OS | 5.1.16 |
-| UniFi Drive | 4.3.6 (release-candidate) |
-| RAM | 8 Go (libre : ~6.1 Go) |
-| CPU temp | 81°C |
-| Uptime | ~4.9 jours |
+| Firmware | 5.1.16 (canal : release-candidate) |
+| Dernier firmware stable | v4.1.11 (canal release) |
+| Firmware RC dispo | v5.1.16+a5860d5 (2026-06-08) |
+| OS | Debian Bullseye (ARM) |
+| Serial | 0cea14ea08d4 |
+| Localisation | Jonage, Rhône, France |
 | SSH | Activé |
+| Propriétaire | Franck Boutboul |
 
 ---
 
-## 💾 Stockage — RAID 5
+## Réseau
 
-| Propriété | Valeur |
-|---|---|
-| Configuration | RAID 5 + 1 disque hot spare |
-| Capacité totale | ~27.2 To (29 962 Go) |
-| Utilisé | ~17.0 To (18 645 Go) |
-| Disponible | ~10.3 To (11 315 Go) |
-| Utilisation | ~62% |
-| Point de montage | `/volume/200f81cd-9825-4c5a-94f8-39107848b9b5` |
-| Santé RAID | ✅ healthy |
-
-### Disques (7 slots)
-
-| Slot | Modèle | Taille | Rôle | Santé | Temp | Heures |
-|---|---|---|---|---|---|---|
-| 1 | Toshiba HDWG460 | 6 To | RAID member | ✅ Good | 48°C | 15 920h |
-| 2 | Toshiba HDWG460 | 6 To | RAID member | ✅ Good | 49°C | 17 149h |
-| 3 | Toshiba HDWG460 | 6 To | RAID member | ✅ Good | 48°C | 15 917h |
-| 4 | Toshiba HDWG460 | 6 To | RAID member | ✅ Good | 48°C | 15 965h |
-| 5 | Toshiba HDWG460 | 6 To | RAID member | ✅ Good | 48°C | 16 230h |
-| 6 | Toshiba HDWG460 | 6 To | RAID member | ✅ Good | 48°C | 11 320h |
-| 7 | Toshiba HDWG460 | 6 To | **Hot spare** | ✅ Good | 46°C | 11 290h |
-
----
-
-## 🌐 Réseau
-
-| Interface | Type | IP | Vitesse |
-|---|---|---|---|
-| enp0s1 | ETH (WAN1) | — | GbE (non connecté) |
-| enp0s2 | SFP+ (WAN2) | 192.168.0.17 | **10G SFP+** ✅ |
-
-DNS configurés : 192.168.0.36, 192.168.0.104, 1.1.1.1, 192.168.50.61, 192.168.50.62
-
----
-
-## 📱 Applications installées
-
-| App | Version | État |
-|---|---|---|
-| UniFi Drive | 4.3.6 | ✅ Running |
-| Users (Identity) | 1.13.5 | ✅ Running |
-
----
-
-## ⚙️ Configuration
-
-- **Auto-backup** : activé
-- **Mise à jour auto** : quotidienne à 4h (firmware uniquement)
-- **Canal firmware** : release-candidate
-- **Timezone** : Europe/Paris
-
----
-
-## 📂 Partages & Services
-
-### Services actifs
-| Service | État | Notes |
-|---|---|---|
-| SMB (Samba) | ✅ Actif | Port 445 |
-| NFS | ✅ Actif | 8 workers |
-| rsync daemon | ✅ Actif | Via rsyncd, config auto-générée |
-| Time Machine | ✅ Actif | Via SMB + Avahi/Bonjour (`fruit:time machine = yes`) |
-| rclone daemon | ✅ Actif | Socket unix `//@unifi-drive-rclone` |
-| Avahi (mDNS) | ✅ Actif | Annonce SMB + Time Machine sur le réseau local |
-
-### Partages SMB
-
-| Nom | Chemin | Accès | Time Machine |
-|---|---|---|---|
-| Personal-Drive | `%H/.data` (home de chaque user) | Utilisateurs UniFi Drive | ✅ |
-| Shared_Drive_Example | `/volume/.../Shared_Drive_Example/.data` | kyftherock, kyfran | ✅ |
-| unifi-drive-backup-only | `/srv/.unifi-drive/homes/` | unifi-drive-backup (backup distant) | — |
-
-### Exports NFS
-
-| Chemin exporté | Client | Options |
-|---|---|---|
-| `Shared_Drive_Example/.data` | 192.168.0.125 | rw, root_squash, all_squash |
-| `Shared_Drive_Example/.data` | 192.168.0.25 (Home Assistant) | rw, root_squash, all_squash |
-
-### Modules rsync (`/etc/rsyncd.conf`)
-
-| Module | Chemin | Type |
-|---|---|---|
-| `Shared_Drive_Example` | `.../Shared_Drive_Example/.data` | Partagé (rw) |
-| `Franck Boutboul` | `.../homes/uisys-.../.data` | Personnel (rw) |
-| `kyftherock` | `.../homes/kyftherock/.data` | Personnel (rw) |
-| `kyfran` | `.../homes/kyfran/.data` | Personnel (rw) |
-
-### Time Machine (Avahi)
-Annonces mDNS sur le réseau local :
-- `Personal-Drive` — Time Machine activé (`adVF=0x82`)
-- `Shared_Drive_Example` — Time Machine activé (`adVF=0x82`)
-
-### Utilisateurs UniFi Drive
-| Username | Rôle |
-|---|---|
-| kyftherock | Admin |
-| kyfran | Utilisateur |
-| uisys-muiq4bdm0l1hh70q12djv0hn8c | Compte système SSO (Franck Boutboul) |
-
----
-
-## 💽 Système de fichiers
-
-| Point de montage | Dispositif | Taille | Utilisé | Dispo |
+| Interface | Type | Mode | IP | Vitesse |
 |---|---|---|---|---|
-| `/volume/200f81cd-...` | `/dev/md3` (RAID 5) | 28 To | 17 To | 11 To (63%) |
-| `/` (overlay) | overlayfs | 24 Go | 6.3 Go | 17 Go |
-| `/boot/firmware` | eMMC | 2 Go | 1.3 Go | 592 Mo |
-| `/var/log` | partition log | 974 Mo | 170 Mo | 737 Mo |
+| enp0s1 | ETH (RJ45) | static | 192.168.0.17 | auto-nego (non connectée) |
+| enp0s2 | SFP+ | dhcp | 192.168.0.17 (active) | **10 Gbps** |
 
-Structure du volume principal :
-```
-/volume/200f81cd-.../
-└── .srv/
-    └── .unifi-drive/
-        ├── Shared_Drive_Example/
-        │   └── .data/         ← partage SMB + NFS
-        ├── homes/
-        │   ├── kyftherock/
-        │   ├── kyfran/
-        │   └── uisys-.../
-        └── .archives/         ← archives chiffrées
+- Gateway : 192.168.0.1
+- DNS : 192.168.0.36 (primaire), 1.1.1.1, 192.168.0.104, 192.168.50.61, 192.168.50.62
+- Interface active : **enp0s2** (SFP+ 10G, MAC 0C:EA:14:EA:08:D5)
+
+---
+
+## Stockage — RAID
+
+| Paramètre | Valeur |
+|---|---|
+| Type RAID | **RAID 5** |
+| Périphérique MD | md3 |
+| Membres actifs | 6 (sda5 sdc5 sdd5 sde5 sdf5 sdg5) |
+| Hot spare | 1 (sdb, slot 7) |
+| Total disques | 7 × 6 To |
+| Capacité brute | ~42 To |
+| Capacité utilisable | **~27,3 Tio** (29 962 Go) |
+| Utilisé | **~17 Tio** (18 645 Go) |
+| Libre | **~10 Tio** (11 317 Go) |
+| Utilisation | **63%** |
+| État RAID | **healthy** |
+| Erreurs | 0 |
+| Point de montage | `/volume/200f81cd-9825-4c5a-94f8-39107848b9b5` |
+
+---
+
+## Disques
+
+| Slot | Nœud | Modèle | Série | Taille | State | Santé | Secteurs défectueux | Power-on (h) | Temp (°C) | Rôle |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | sdg | TOSHIBA HDWG460 | 23H0A02JFA4H | 6 To | normal | **good** | 0 | 15 944 | 41 | data |
+| 2 | sde | TOSHIBA HDWG460 | 92E0A00YFR1H | 6 To | normal | **good** | 0 | 17 173 | 42 | data |
+| 3 | sdc | TOSHIBA HDWG460 | 23H0A039FA4H | 6 To | normal | **good** | 0 | 15 941 | 42 | data |
+| 4 | sdf | TOSHIBA HDWG460 | 23G0A06DFA4H | 6 To | normal | **good** | 0 | 15 990 | 41 | data |
+| 5 | sdd | TOSHIBA HDWG460 | 23H0A043FA4H | 6 To | normal | **good** | 0 | 16 255 | 42 | data |
+| 6 | sda | TOSHIBA HDWG460 | Y4U0A00JFA4H | 6 To | normal | **good** | 0 | 11 345 | 42 | data |
+| 7 | sdb | TOSHIBA HDWG460 | Y4U0A00XFA4H | 6 To | normal | **good** | 0 | 11 315 | 41 | **hot spare** |
+
+- Firmware disques : 0601 (slots 1-5), 0602 (slots 6-7)
+- Interface : SATA 3.3, 7200 RPM, type HDD
+- Tous les disques : aucun secteur défectueux, santé good
+
+---
+
+## Espaces système
+
+| Volume | Taille | Utilisé | Dispo | Type |
+|---|---|---|---|---|
+| md3 (RAID5 principal) | 28 T | 17 T | 11 T | primary |
+| overlayfs-root (/) | 24 G | 6,4 G | 16 G | root |
+| /boot/firmware | 2,0 G | 1,3 G | 592 M | root partition |
+| /var/log | 974 M | 165 M | 743 M | logs |
+| /persistent | 2,0 G | 182 M | 1,7 G | persistant |
+| /tmp | 2,0 G | ~0 | 2,0 G | tmpfs |
+| swap (md0) | RAID1 7× | 0 | 0 | swap |
+
+---
+
+## Partages SMB
+
+| Partage | Chemin | Utilisateurs | Time Machine |
+|---|---|---|---|
+| Shared_Drive_Example | `/volume/200f81cd-9825-4c5a-94f8-39107848b9b5/.srv/.unifi-drive/Shared_Drive_Example/.data` | kyftherock, kyfran, unifi-drive-backup | **Oui** |
+
+- Config : `/etc/samba/share.conf`
+- Guest ok : non
+- Force group : `unifi-drive`
+- `fruit:time machine = yes` → compatible Time Machine macOS
+
+---
+
+## Partages NFS
+
+Aucun export NFS configuré (`/etc/exports` vide).
+
+---
+
+## Services actifs
+
+| Service | État | Détail |
+|---|---|---|
+| smbd | **running** | 5 processus (multi-worker) |
+| nfsd | **running** | 8 threads kernel |
+| rclone | **running** | UniFi Drive backup daemon (`/data/unifi-drive/rclone/rclone.conf`) via unix socket |
+
+Commandes de contrôle SSH :
+```bash
+ssh root@192.168.0.17
+systemctl status smbd nfsd
 ```
 
 ---
 
-## 🔒 Sécurité & Accès
+## Applications UniFi OS
 
-- SSH activé — user `root`, password auth
-- Accès local : https://192.168.0.17
-- Accès interne : https://unas.test.teamfnb.com
-- Réseau Main (192.168.0.0/24) via 10G SFP+
-- SMB : authentification obligatoire (`map to guest = never`)
-- NFS : restricted to 192.168.0.125 et 192.168.0.25
+| App | Type | État | Version |
+|---|---|---|---|
+| unifi-drive (Drive) | controller | **active** | 4.3.6 |
+| identity | app | **active** | standard |
+
+- Drive API prefix : `/proxy/drive/`
+- Canal de mise à jour Drive : release-candidate
+- Rollback disponible : Drive 4.2.6
 
 ---
 
-## ⚠️ Points d'attention
+## Accès et credentials
 
-- **CPU à 81°C** — températures à surveiller
-- **Disque slot 2** : 17 149h (le plus usé de l'ensemble)
-- **enp0s1 (ETH)** non connecté — seul le SFP+ 10G est actif
-- **Volume à 63%** — encore de la marge mais à surveiller avec rclone
+| Méthode | Paramètres |
+|---|---|
+| API login | `POST https://192.168.0.17/api/auth/login` → JSON `{"username":"kyftherock","password":"***"}` |
+| SSH | `root@192.168.0.17` — password ou clé SSH |
+| Interface Web | `https://192.168.0.17` |
+| Clé SSH | `~/.ssh/id_rsa` (M4 Pro) |
+
+> ⚠️ `/proxy/nas/api/v1/*` et `/proxy/unas/api/v1/*` retournent 404 HTML. Utiliser `/api/system` uniquement.
+
+---
+
+## Watchdog
+
+Script : `~/.hermes/scripts/unas_disk_watch.py`
+Fréquence : toutes les 5 minutes (no_agent)
+Surveille : état disques, température >55°C, utilisation volume >80%, services SMB/NFS/rclone
+
+Seuils d'alerte :
+- Utilisation actuelle : **63%** (seuil alerte : 80%)
+- Température max actuelle : **42°C** (seuil alerte : 55°C)
+- Secteurs défectueux : **0** sur tous les disques
