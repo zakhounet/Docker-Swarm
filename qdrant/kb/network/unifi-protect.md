@@ -1,73 +1,58 @@
-# UniFi Protect — NVR & Caméras
+# UniFi Protect — NVR + Caméras
 
-> Généré automatiquement depuis l'API UniFi Protect
-> Dernière mise à jour : juin 2026
+> Snapshot généré le 2026-06-15 03:02 — Source : API UniFi Protect (192.168.30.100)
 
 ---
 
-## 📦 NVR — UNVR4
+## NVR
 
-| Propriété | Valeur |
+| Attribut | Valeur |
 |---|---|
+| Nom | UniFi  NVR |
 | Modèle | UNVR4 |
-| IP | 192.168.30.100 (VLAN 30 — Camera) |
+| IP | 192.168.30.100 |
+| MAC | E4388331E437 |
 | Firmware | 5.1.15 |
 | Version Protect | 7.1.83 |
-| État disques | ✅ OK |
-| Stockage RAID | RAID (3× HDD actifs) |
-| Capacité totale | ~22.2 To |
-| Utilisé | ~20.9 To (94.3%) |
-| Disponible | ~1.3 To |
-| Débit enregistrement | ~5.3 Mbps |
-| Mode allocation | Balanced (50% HQ) |
-| Recyclage actif | Oui |
+| Uptime | N/A |
 
-### Disques (4 slots)
-| Slot | Modèle | Taille | État |
+## Stockage NVR
+
+| Attribut | Valeur |
+|---|---|
+| Capacité totale | N/A |
+| Utilisé | 20.4 To (N/A) |
+
+### Disques
+
+| Modèle | Taille | Sain | Rotation |
 |---|---|---|---|
-| 1 | Toshiba MG08ADA800E | 8 To | ✅ Good |
-| 2 | WDC WD85PURZ-85C4WY0 | 8 To | ✅ Good |
-| 3 | — | — | ❌ DOWN (disque défaillant) |
-| 4 | Toshiba HDWG480 | 8 To | ✅ Good |
+| TOSHIBA MG08ADA800E | 7.3 To | ✅ | HDD |
+| WDC WD85PURZ-85C4WY0 | 7.3 To | ✅ | HDD |
+| TOSHIBA HDWG480 | 7.3 To | ✅ | HDD |
+| TOSHIBA HDWG480 | 7.3 To | ✅ | HDD |
 
----
+## Caméras (12 — 11 connectées, 1 déconnectées)
 
-## 📷 Caméras (12)
-
-| Nom | Modèle | IP | MAC | État | Résolution max | FPS | Enregistrement | Smart Detect |
+| Nom | Modèle | IP | MAC | Firmware | État | Enregistrement | Résolution | Smart Detect |
 |---|---|---|---|---|---|---|---|---|
-| Entrée Principale | UVC G6 PTZ | 192.168.30.142 | 84:78:48:B2:CA:00 | ✅ | 3840×2160 | 30 | always | person, vehicle, animal, face, plate |
-| Entrée Maison | UVC G4 Pro | 192.168.30.141 | D0:21:F9:93:41:B1 | ✅ | 3840×2160 | 24 | detections | person, vehicle, animal |
-| Entrée Jardin | UVC G5 Flex | 192.168.30.148 | F4:E2:C6:0F:FA:B4 | ✅ | 2688×1512 | 30 | always | person, vehicle |
-| Entrée Haut | UVC G5 Flex | 192.168.30.147 | F4:E2:C6:0B:C2:D0 | ✅ | 2688×1512 | 30 | detections | person, vehicle, animal |
-| Jardin derrière | UVC G6 Bullet | 192.168.30.140 | 84:78:48:54:27:16 | ✅ | 3840×2160 | 30 | always | person, vehicle, animal, face, plate |
-| Jardin côté | UVC G6 Bullet | 192.168.30.144 | 84:78:48:54:27:28 | ✅ | 3840×2160 | 30 | always | person, vehicle, animal, face, plate |
-| Piscine | UVC G6 PTZ | 192.168.30.146 | 84:78:48:B2:D1:D5 | ✅ | 3840×2160 | 30 | always | person, vehicle, animal, face, plate |
-| Abri de Jardin | UVC G6 Instant | 192.168.30.149 | 84:78:48:28:58:84 | ✅ | 3840×2160 | 30 | always | person, vehicle, animal, face, plate |
-| Chambre enfants | UVC G4 Instant | 192.168.30.145 | D0:21:F9:95:3B:B5 | ❌ DISCONNECTED | 2688×1512 | 30 | always | person, vehicle, animal |
-| Bureau | UVC G3 Flex | 192.168.30.143 | D0:21:F9:95:09:17 | ✅ | 1920×1080 | 25 | always | — |
-| C210 | C210 | 192.168.30.150 | 7C:F1:7E:B9:66:45 | ✅ | — | — | always | — |
-| C110 | C110 | 192.168.30.151 | DC:62:79:41:3E:B8 | ✅ | — | — | always | — |
+| Abri de Jardin | UVC G6 Instant | 192.168.30.149 | 847848285884 | 5.3.94 | ✅ CONNECTED | always | 3840×2160@30fps | person, vehicle, animal, face, licensePlate |
+| Bureau | UVC G3 Flex | 192.168.30.143 | D021F9950917 | 4.75.66 | ✅ CONNECTED | always | 1920×1080@25fps | — |
+| Piscine | UVC G6 PTZ | 192.168.30.146 | 847848B2D1D5 | 5.3.94 | ✅ CONNECTED | always | 3840×2160@30fps | person, vehicle, animal, face, licensePlate |
+| Jardin coté | UVC G6 Bullet | 192.168.30.144 | 847848542728 | 5.3.94 | ✅ CONNECTED | always | 3840×2160@30fps | person, vehicle, animal, face, licensePlate |
+| None | C210 | 192.168.30.150 | 7CF17EB96645 | None | ✅ CONNECTED | always | N/A | — |
+| None | C110 | 192.168.30.151 | DC6279413EB8 | None | ✅ CONNECTED | always | N/A | — |
+| Chambre enfants | UVC G4 Instant | 192.168.30.145 | D021F9953BB5 | 5.2.73 | ❌ DISCONNECTED | always | 2688×1512@30fps | person, vehicle, animal |
+| Entrée Jardin | UVC G5 Flex | 192.168.30.148 | F4E2C60FFAB4 | 5.3.94 | ✅ CONNECTED | always | 2688×1512@30fps | person, vehicle, animal |
+| Entrée Maison | UVC G4 Pro | 192.168.30.141 | D021F99341B1 | 5.3.94 | ✅ CONNECTED | detections | 3840×2160@24fps | person, vehicle, animal |
+| Entrée Principale | UVC G6 PTZ | 192.168.30.142 | 847848B2CA00 | 5.3.94 | ✅ CONNECTED | always | 3840×2160@30fps | person, vehicle, animal, face, licensePlate |
+| Jardin derrière  | UVC G6 Bullet | 192.168.30.140 | 847848542716 | 5.3.94 | ✅ CONNECTED | always | 3840×2160@30fps | person, vehicle, animal, face, licensePlate |
+| Entrée Haut | UVC G5 Flex | 192.168.30.147 | F4E2C60BC2D0 | 5.3.94 | ✅ CONNECTED | detections | 2688×1512@30fps | person, vehicle, animal |
 
-### Channels disponibles par caméra (RTSP)
-- **G6 PTZ / G6 Bullet / G6 Instant / G4 Pro** : High 3840×2160, Medium 1280×720, Low 640×360
-- **G5 Flex** : High 2688×1512, Medium 1280×720, Low 640×360
-- **G4 Instant** : High 2688×1512, Medium 1280×720, Low 640×360
-- **G3 Flex** : High 1920×1080, Medium 1024×576, Low 640×360
+## Liveviews (1)
 
----
+- **Default** : 10 caméras
 
-## 🔴 Points d'attention
+## Points d'attention
 
-- **Chambre enfants (G4 Instant)** — DISCONNECTED (192.168.30.145)
-- **Stockage à 94.3%** — recyclage actif, surveiller la rétention
-- **C210 / C110** — firmware non renseigné, pas de smart detect configuré
-
----
-
-## 🌐 Réseau
-
-- VLAN : **30 — Camera** (192.168.30.0/24)
-- Zone ZBF : **Untrusted** — accès sortant bloqué par défaut
-- Exception firewall : NVR 192.168.30.100 → ports 443 + ICMP depuis WireGuard VPN
-- Accès Protect : `https://192.168.30.100`
+- ⚠️ **1 caméra(s) déconnectée(s)** : Chambre enfants
